@@ -3,14 +3,13 @@
 #include <SDL_image.h>
 #include <math.h>
 #include <SDL_timer.h>
+#include "keyboard.h"
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 
 const int MAP_WIDTH = 3000;
 const int MAP_HEIGHT = 3000;
-
-const Uint8* gKeyboard = NULL;
 
 const int MOVE_SPEED = 1500;	//movement speed of the player in pixels per second
 
@@ -63,7 +62,7 @@ int main(int argc, char* argv[]){
 			timePassed = (currentTime - lastTime) / 1000.0f;	//division for conversion from milliseconds to seconds
 			lastTime = currentTime;
 
-			gKeyboard = SDL_GetKeyboardState(NULL);
+			Keyboard
 			
 			if (gKeyboard[SDL_SCANCODE_W]) playerY -= MOVE_SPEED * timePassed;
 			if (gKeyboard[SDL_SCANCODE_S]) playerY += MOVE_SPEED * timePassed;
