@@ -23,6 +23,10 @@ void Ability::setY(int y){
 	rect.y = y;
 }
 
-SDL_Rect* Ability::getRect(){
-	return &rect;
+int Ability::getWidth(){
+	return rect.w;
+}
+
+int Ability::getHeight(){
+	return rect.h;
 }

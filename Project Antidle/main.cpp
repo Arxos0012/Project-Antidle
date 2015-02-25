@@ -5,14 +5,13 @@
 #include <SDL_timer.h>
 #include "keyboard.h"
 #include "ability.h"
+#include "World.h"
+#include <map>
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 
-const int MAP_WIDTH = 550;
-const int MAP_HEIGHT = 550;
-
-const int MOVE_SPEED = MAP_WIDTH / 2;	//movement speed of the player in pixels per second
+int MOVE_SPEED;	//movement speed of the player in pixels per second
 
 Keyboard gKeyboard;
 
@@ -20,6 +19,7 @@ float playerX = 0;
 float playerY = 0;
 
 SDL_Rect gPlayer;
+std::map < int, Ability > abilities;
 
 bool init();		//initalizes all SDL stuff
 bool loadMedia();	//loads all assets
@@ -27,8 +27,6 @@ void close();		//frees up all memory at the end
 
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
-
-SDL_Rect gMap;
 
 int main(int argc, char* argv[]){
 	if (!init()){
@@ -40,16 +38,17 @@ int main(int argc, char* argv[]){
 	else{
 		bool quit = false;
 
-		gMap.w = MAP_WIDTH;
-		gMap.h = MAP_HEIGHT;
+		World world(550, 550);
+
+		MOVE_SPEED = world.getWidth() / 2;
 
 		gPlayer.x = SCREEN_WIDTH/2 - 25;
 		gPlayer.y = SCREEN_HEIGHT/ 2 - 25;
 		gPlayer.w = 50;
 		gPlayer.h = 50;
 
-		int ableRadius = 10;
 		Ability testAbility(SCREEN_WIDTH/2 - 100, SCREEN_HEIGHT/2 - 100);
+		abilities.insert();
 
 		SDL_Event e;
 		
@@ -69,42 +68,47 @@ int main(int argc, char* argv[]){
 			lastTime = currentTime;
 
 			gKeyboard.update();
-			
+
 			if (gKeyboard.getKeyState(SDL_SCANCODE_W)){
 				playerY -= MOVE_SPEED * timePassed;
-				if ( playerY - gPlayer.h/2 < -MAP_HEIGHT / 2) playerY = (-MAP_HEIGHT + gPlayer.h) / 2.0f;
+				if (playerY - gPlayer.h / 2 < -world.getHeight() / 2) playerY = (-world.getHeight() + gPlayer.h) / 2.0f;
 			}
 			if (gKeyboard.getKeyState(SDL_SCANCODE_S)){
 				playerY += MOVE_SPEED * timePassed;
-				if (playerY + gPlayer.h/2 > MAP_HEIGHT / 2) playerY = (MAP_HEIGHT - gPlayer.h) / 2.0f;
+				if (playerY + gPlayer.h / 2 > world.getHeight() / 2) playerY = (world.getHeight() - gPlayer.h) / 2.0f;
 			}
 			if (gKeyboard.getKeyState(SDL_SCANCODE_A)){
 				playerX -= MOVE_SPEED * timePassed;
-				if (playerX - gPlayer.w/2 < -MAP_WIDTH / 2) playerX = (-MAP_WIDTH + gPlayer.w) / 2.0f;
+				if (playerX - gPlayer.w / 2 < -world.getWidth() / 2) playerX = (-world.getWidth() + gPlayer.w) / 2.0f;
 			}
 			if (gKeyboard.getKeyState(SDL_SCANCODE_D)){
 				playerX += MOVE_SPEED * timePassed;
-				if (playerX + gPlayer.w/2 > MAP_WIDTH / 2) playerX = (MAP_WIDTH - gPlayer.w) / 2.0f;
+				if (playerX + gPlayer.w / 2 > world.getWidth() / 2) playerX = (world.getWidth() - gPlayer.w) / 2.0f;
 			}
 
 			std::cout << "(" << playerX << ", " << playerY << ")\n";
 
-			gMap.x = (int)((SCREEN_WIDTH - MAP_WIDTH) / 2 - playerX);
-			gMap.y = (int)((SCREEN_HEIGHT - MAP_HEIGHT) / 2 - playerY);
-			testAbility.setX((int)(testAbility.getX() - playerX));
-			testAbility.setY((int)(testAbility.getY() - playerY));
+			world.setX((int)((SCREEN_WIDTH - world.getWidth()) / 2 - playerX));
+			world.setY((int)((SCREEN_HEIGHT - world.getHeight()) / 2 - playerY));
+
+			float ableCoords[2];
+			ableCoords[0] = testAbility.getX() - playerX;
+			ableCoords[1] = testAbility.getY() - playerY;
+			SDL_Rect tempRect = { ableCoords[0], ableCoords[1], testAbility.getWidth(), testAbility.getHeight() };
+
+			world.coordWorldToScreen(ableCoords, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 			SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
 			SDL_RenderClear(gRenderer);
 
 			SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
-			SDL_RenderFillRect(gRenderer, &gMap);
+			SDL_RenderFillRect(gRenderer, world.getMapRect());
 			
 			SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0xFF, 0xFF);
 			SDL_RenderFillRect(gRenderer, &gPlayer);
 
 			SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-			SDL_RenderFillRect(gRenderer, testAbility.getRect());
+			SDL_RenderFillRect(gRenderer, &tempRect);
 
 			SDL_RenderPresent(gRenderer);
 		}

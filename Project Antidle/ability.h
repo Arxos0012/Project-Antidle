@@ -5,12 +5,17 @@
 
 class Ability{
 public:
+	friend enum actions{
+		TEST_ABILITY
+	};
+
 	Ability(int x = 0, int y = 0);
 	int getX();
 	int getY();
 	void setX(int x);
 	void setY(int y);
-	SDL_Rect* getRect();
+	int getWidth();
+	int getHeight();
 private:
 	SDL_Rect rect;
 };
