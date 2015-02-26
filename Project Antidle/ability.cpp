@@ -30,3 +30,7 @@ int Ability::getWidth(){
 int Ability::getHeight(){
 	return rect.h;
 }
+
+SDL_Rect* Ability::getRect(){
+	return &rect;
+}

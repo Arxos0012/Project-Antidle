@@ -5,7 +5,7 @@
 
 class Ability{
 public:
-	friend enum actions{
+	const static enum actions{
 		TEST_ABILITY
 	};
 
@@ -16,6 +16,7 @@ public:
 	void setY(int y);
 	int getWidth();
 	int getHeight();
+	SDL_Rect* getRect();
 private:
 	SDL_Rect rect;
 };

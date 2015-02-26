@@ -6,6 +6,7 @@
 #include "keyboard.h"
 #include "ability.h"
 #include "World.h"
+#include "Enemy.h"
 #include <map>
 
 const int SCREEN_WIDTH = 800;
@@ -47,8 +48,9 @@ int main(int argc, char* argv[]){
 		gPlayer.w = 50;
 		gPlayer.h = 50;
 
+		Enemy testDummy(SCREEN_WIDTH/2 - 100, SCREEN_HEIGHT/2);
+
 		Ability testAbility(SCREEN_WIDTH/2 - 100, SCREEN_HEIGHT/2 - 100);
-		abilities.insert();
 
 		SDL_Event e;
 		
