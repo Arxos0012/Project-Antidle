@@ -18,8 +18,8 @@ int World::getHeight(){
 }
 
 void World::coordWorldToScreen(float* coords, int screenWidth, int screenHeight){
-	coords[0] = screenWidth / 2 - coords[0];
-	coords[0] = screenHeight / 2 - coords[1];
+	coords[0] = screenWidth / 2 + coords[0];
+	coords[1] = screenHeight / 2 + coords[1];
 }
 
 void World::coordScreenToWorld(float* coords, int screenWidth, int screenHeight){

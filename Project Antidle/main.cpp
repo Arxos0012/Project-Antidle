@@ -50,7 +50,7 @@ int main(int argc, char* argv[]){
 
 		Enemy testDummy(SCREEN_WIDTH/2 - 100, SCREEN_HEIGHT/2);
 
-		Ability testAbility(SCREEN_WIDTH/2 - 100, SCREEN_HEIGHT/2 - 100);
+		Ability testAbility(-100, -100);
 
 		SDL_Event e;
 		
@@ -93,12 +93,9 @@ int main(int argc, char* argv[]){
 			world.setX((int)((SCREEN_WIDTH - world.getWidth()) / 2 - playerX));
 			world.setY((int)((SCREEN_HEIGHT - world.getHeight()) / 2 - playerY));
 
-			float ableCoords[2];
-			ableCoords[0] = testAbility.getX() - playerX;
-			ableCoords[1] = testAbility.getY() - playerY;
-			SDL_Rect tempRect = { ableCoords[0], ableCoords[1], testAbility.getWidth(), testAbility.getHeight() };
+			int* abilityCoords;
+			abilityCoords = testAbility.getCoords();
 
-			world.coordWorldToScreen(ableCoords, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 			SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
 			SDL_RenderClear(gRenderer);

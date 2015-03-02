@@ -2,6 +2,7 @@
 #define ABILITY_H
 
 #include <SDL.h>
+#include <array>
 
 class Ability{
 public:
@@ -17,7 +18,12 @@ public:
 	int getWidth();
 	int getHeight();
 	SDL_Rect* getRect();
+	std::array<int, 2> const & getCoords(){
+		return coords;
+	}
 private:
+	void updateCoords();
+	std::array<int, 2> coords;
 	SDL_Rect rect;
 };
 

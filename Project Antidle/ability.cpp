@@ -1,4 +1,7 @@
 #include "ability.h"
+#include <array>
+
+using namespace std;
 
 Ability::Ability(int x, int y){
 	rect.x = x;
@@ -33,4 +36,14 @@ int Ability::getHeight(){
 
 SDL_Rect* Ability::getRect(){
 	return &rect;
+}
+
+std::array Ability::getCoords(){
+	updateCoords();
+	return coords;
+}
+
+void Ability::updateCoords(){
+	coords[0] = rect.x;
+	coords[1] = rect.y;
 }
