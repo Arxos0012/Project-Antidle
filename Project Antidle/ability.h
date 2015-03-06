@@ -2,7 +2,7 @@
 #define ABILITY_H
 
 #include <SDL.h>
-#include <array>
+#include <string>
 
 class Ability{
 public:
@@ -11,25 +11,15 @@ public:
 	};
 
 	Ability(int x = 0, int y = 0);
-	int getX();
-	int getY();
-	void setX(int x);
-	void setY(int y);
+	int getX(){ return worldRect.x; }
+	int getY(){ return worldRect.y; }
 	int getWidth();
 	int getHeight();
-	SDL_Rect* getWorldRect();
-	SDL_Rect* getScreenRect(){
-		return &screenRect;
-	}
-	void setScreenRect(int* coords){
-		screenRect.x = coords[0];
-		screenRect.y = coords[2];
-	}
-	int* getCoords(){
-		return coords;
-	}
+	SDL_Rect* getScreenRect();
+	void refreshScreenCoords(int* coords);
+	void getCoords(int* coords);
+	std::string name(){ return "hi there"; };
 private:
-	void updateCoords();
 	int coords[2];
 	SDL_Rect worldRect;
 	SDL_Rect screenRect;

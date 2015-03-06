@@ -18,9 +18,9 @@ int World::getHeight(){
 	return mapRect.h;
 }
 
-void World::coordWorldToScreen(int* coords, int width, int height, int screenWidth, int screenHeight){
-	coords[0] += (screenWidth - width) /2;
-	coords[1] += (screenHeight - height) / 2;
+void World::coordWorldToScreen(int* coords, float* player, int width, int height, int screenWidth, int screenHeight){
+	coords[0] += (screenWidth - width) /2 - player[0];
+	coords[1] += (screenHeight - height) / 2 - player[1];
 }
 
 void World::coordScreenToWorld(int* coords, int width, int height, int screenWidth, int screenHeight){

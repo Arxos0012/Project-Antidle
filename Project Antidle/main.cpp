@@ -1,14 +1,19 @@
 #include <iostream>
+#include <string>
 #include <SDL.h>
 #include <SDL_image.h>
 #include <math.h>
 #include <SDL_timer.h>
+#include <map>
 #include "keyboard.h"
 #include "World.h"
 #include "Enemy.h"
+#include "ability.h"
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
+
+int mouseX, mouseY;
 
 int MOVE_SPEED;	//movement speed of the player in pixels per second
 
@@ -16,7 +21,12 @@ Keyboard gKeyboard;
 
 float player[] = { 0, 0 };
 
+int playerColor[] = { 0x00, 0xFF, 0x00 };
+
 SDL_Rect gPlayer;
+
+std::map<int, Ability> abilites;
+std::map<int, Ability> playerAbilites;
 
 bool init();		//initalizes all SDL stuff
 bool loadMedia();	//loads all assets
@@ -46,6 +56,10 @@ int main(int argc, char* argv[]){
 
 		Enemy testDummy(-200, -200);
 
+		Ability testAbility(200, 200);
+
+		abilites[Ability::TEST_ABILITY] = testAbility;
+
 		SDL_Event e;
 		
 		Uint32 lastTime = SDL_GetTicks();	//returns time passed since initialization of SDL
@@ -56,6 +70,27 @@ int main(int argc, char* argv[]){
 			while (SDL_PollEvent(&e) != 0){
 				if (e.type == SDL_QUIT){
 					quit = true;
+				}
+				if (e.type == SDL_MOUSEBUTTONDOWN || SDL_MOUSEBUTTONUP || SDL_MOUSEMOTION){
+					SDL_GetMouseState(&mouseX, &mouseY);
+					
+					bool inScreen = true;
+					if (mouseX < 0 || mouseX > SCREEN_WIDTH) inScreen = false;
+					if (mouseY < 0 || mouseY > SCREEN_HEIGHT) inScreen = false;
+
+					if (inScreen){
+						std::map<int, Ability>::iterator it = playerAbilites.find(Ability::TEST_ABILITY);
+						if (e.type == SDL_MOUSEBUTTONDOWN && (playerAbilites.find(Ability::TEST_ABILITY) != playerAbilites.end())){
+							playerColor[0] = 0xAA;
+							playerColor[1] = 0xAA;
+							playerColor[2] = 0xAA;
+						}
+						if (e.type == SDL_MOUSEBUTTONUP){
+							playerColor[0] = 0x00;
+							playerColor[1] = 0xFF;
+							playerColor[2] = 0x00;
+						}
+					}
 				}
 			}
 
@@ -85,10 +120,24 @@ int main(int argc, char* argv[]){
 			world.setX((int)((SCREEN_WIDTH - world.getWidth()) / 2 - player[0]));
 			world.setY((int)((SCREEN_HEIGHT - world.getHeight()) / 2 - player[1]));
 
+			std::map<int, Ability>::iterator jt;
+			for (jt = abilites.begin(); jt != abilites.end(); jt++){
+				float distance = sqrt(pow(player[0] - jt->second.getX(), 2) + pow(player[1] - jt->second.getY(), 2));
+				if (distance <= 25 && abilites.size() > 0){
+					playerAbilites[jt->first] = jt->second;
+					//abilites.erase(jt->first);
+				}
+			}
+
+			std::map<int, Ability>::iterator kt;
+			for (kt = playerAbilites.begin(); kt != playerAbilites.end(); kt++){
+				std::cout << kt->second.name() << "\n";
+			}
+
 			testDummy.move(player, timePassed);
 			int dummyCoords[2];
 			testDummy.getCoords(dummyCoords);
-			world.coordWorldToScreen(dummyCoords, testDummy.getWidth(), testDummy.getHeight(), SCREEN_WIDTH, SCREEN_HEIGHT);
+			world.coordWorldToScreen(dummyCoords, player, testDummy.getWidth(), testDummy.getHeight(), SCREEN_WIDTH, SCREEN_HEIGHT);
 			testDummy.refeshScreenCoords(dummyCoords);
 
 			SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
@@ -97,11 +146,23 @@ int main(int argc, char* argv[]){
 			SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
 			SDL_RenderFillRect(gRenderer, world.getMapRect());
 			
-			SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0xFF, 0xFF);
+			SDL_SetRenderDrawColor(gRenderer, playerColor[0], playerColor[1], playerColor[2], 0xFF);
 			SDL_RenderFillRect(gRenderer, &gPlayer);
 			
 			SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 			SDL_RenderFillRect(gRenderer, testDummy.getScreenRect());
+
+			if (abilites.size() > 0){
+				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0xFF, 0xFF);
+				std::map<int, Ability>::iterator it;
+				for (it = abilites.begin(); it != abilites.end(); it++){
+					int testCoords[2];
+					it->second.getCoords(testCoords);
+					world.coordWorldToScreen(testCoords, player, it->second.getWidth(), it->second.getHeight(), SCREEN_WIDTH, SCREEN_HEIGHT);
+					it->second.refreshScreenCoords(testCoords);
+					SDL_RenderFillRect(gRenderer, it->second.getScreenRect());
+				}
+			}
 
 			SDL_RenderPresent(gRenderer);
 		}

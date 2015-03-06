@@ -13,9 +13,8 @@ Enemy::Enemy(int x, int y){
 }
 
 void Enemy::move(float* target, float time){
-	timeCollected += time;
 	float distance = sqrt(pow(target[0] - worldRect.x, 2) + pow(target[1] - worldRect.y, 2));
-	if (distance == 0) return;
+	if (distance <= 25) return;
 
 	float cos = (target[0] - worldRect.x) / distance;
 	float sin = (target[1] - worldRect.y) / distance;
@@ -23,10 +22,17 @@ void Enemy::move(float* target, float time){
 	float xSpeed = cos*moveSpeed*time;
 	float ySpeed = sin*moveSpeed*time;
 
-	std::cout << cos << "," << sin << std::endl;
+	collectiveX += xSpeed;
+	collectiveY += ySpeed;
 
-	worldRect.x += xSpeed;
-	worldRect.y += ySpeed;
+	if (collectiveX >= 1 || collectiveX <= -1){
+		worldRect.x += collectiveX;
+		collectiveX = 0;
+	}
+	if (collectiveY >= 1 || collectiveY <= -1){
+		worldRect.y += collectiveY;
+		collectiveY = 0;
+	}
 }
 
 

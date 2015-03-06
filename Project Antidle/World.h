@@ -10,7 +10,7 @@ public:
 	int getWidth();
 	int getHeight();
 
-	void coordWorldToScreen(int* coords, int width, int height, int screenWidth, int screenHeight);
+	void coordWorldToScreen(int* coords, float* player, int width, int height, int screenWidth, int screenHeight);
 	void coordScreenToWorld(int* coords, int width, int height, int screenWidth, int screenHeight);
 
 	SDL_Rect* getMapRect();

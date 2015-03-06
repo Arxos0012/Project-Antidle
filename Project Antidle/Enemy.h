@@ -15,8 +15,11 @@ public:
 private:
 	SDL_Rect worldRect;
 	SDL_Rect screenRect;
-	int moveSpeed = 20;	//in pixels per second
+	float moveSpeed = 100;	//in pixels per second
 	float timeCollected = 0;
+
+	float collectiveX = 0;
+	float collectiveY = 0;
 };
 
 #endif
