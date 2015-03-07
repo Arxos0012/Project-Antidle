@@ -2,6 +2,7 @@
 #define WORLD_H
 
 #include <SDL.h>
+#include <array>
 
 class World{
 public:
@@ -9,8 +10,8 @@ public:
 	int getWidth();
 	int getHeight();
 
-	void coordWorldToScreen(float coords[], int screenWidth, int screenHeight);
-	void coordScreenToWorld(float coords[], int screenWidth, int screenHeight);
+	void coordWorldToScreen(int* coords, int width, int height, int screenWidth, int screenHeight);
+	void coordScreenToWorld(int* coords, int width, int height, int screenWidth, int screenHeight);
 
 	SDL_Rect* getMapRect();
 

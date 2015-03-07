@@ -4,10 +4,8 @@
 #include <math.h>
 #include <SDL_timer.h>
 #include "keyboard.h"
-#include "ability.h"
 #include "World.h"
 #include "Enemy.h"
-#include <map>
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
@@ -16,11 +14,9 @@ int MOVE_SPEED;	//movement speed of the player in pixels per second
 
 Keyboard gKeyboard;
 
-float playerX = 0;
-float playerY = 0;
+float player[] = { 0, 0 };
 
 SDL_Rect gPlayer;
-std::map < int, Ability > abilities;
 
 bool init();		//initalizes all SDL stuff
 bool loadMedia();	//loads all assets
@@ -48,9 +44,7 @@ int main(int argc, char* argv[]){
 		gPlayer.w = 50;
 		gPlayer.h = 50;
 
-		Enemy testDummy(SCREEN_WIDTH/2 - 100, SCREEN_HEIGHT/2);
-
-		Ability testAbility(-100, -100);
+		Enemy testDummy(-200, -200);
 
 		SDL_Event e;
 		
@@ -72,30 +66,30 @@ int main(int argc, char* argv[]){
 			gKeyboard.update();
 
 			if (gKeyboard.getKeyState(SDL_SCANCODE_W)){
-				playerY -= MOVE_SPEED * timePassed;
-				if (playerY - gPlayer.h / 2 < -world.getHeight() / 2) playerY = (-world.getHeight() + gPlayer.h) / 2.0f;
+				player[1] -= MOVE_SPEED * timePassed;
+				if (player[1] - gPlayer.h / 2 < -world.getHeight() / 2) player[1] = (-world.getHeight() + gPlayer.h) / 2.0f;
 			}
 			if (gKeyboard.getKeyState(SDL_SCANCODE_S)){
-				playerY += MOVE_SPEED * timePassed;
-				if (playerY + gPlayer.h / 2 > world.getHeight() / 2) playerY = (world.getHeight() - gPlayer.h) / 2.0f;
+				player[1] += MOVE_SPEED * timePassed;
+				if (player[1] + gPlayer.h / 2 > world.getHeight() / 2) player[1] = (world.getHeight() - gPlayer.h) / 2.0f;
 			}
 			if (gKeyboard.getKeyState(SDL_SCANCODE_A)){
-				playerX -= MOVE_SPEED * timePassed;
-				if (playerX - gPlayer.w / 2 < -world.getWidth() / 2) playerX = (-world.getWidth() + gPlayer.w) / 2.0f;
+				player[0] -= MOVE_SPEED * timePassed;
+				if (player[0] - gPlayer.w / 2 < -world.getWidth() / 2) player[0] = (-world.getWidth() + gPlayer.w) / 2.0f;
 			}
 			if (gKeyboard.getKeyState(SDL_SCANCODE_D)){
-				playerX += MOVE_SPEED * timePassed;
-				if (playerX + gPlayer.w / 2 > world.getWidth() / 2) playerX = (world.getWidth() - gPlayer.w) / 2.0f;
+				player[0] += MOVE_SPEED * timePassed;
+				if (player[0] + gPlayer.w / 2 > world.getWidth() / 2) player[0] = (world.getWidth() - gPlayer.w) / 2.0f;
 			}
 
-			std::cout << "(" << playerX << ", " << playerY << ")\n";
+			world.setX((int)((SCREEN_WIDTH - world.getWidth()) / 2 - player[0]));
+			world.setY((int)((SCREEN_HEIGHT - world.getHeight()) / 2 - player[1]));
 
-			world.setX((int)((SCREEN_WIDTH - world.getWidth()) / 2 - playerX));
-			world.setY((int)((SCREEN_HEIGHT - world.getHeight()) / 2 - playerY));
-
-			int* abilityCoords;
-			abilityCoords = testAbility.getCoords();
-
+			testDummy.move(player, timePassed);
+			int dummyCoords[2];
+			testDummy.getCoords(dummyCoords);
+			world.coordWorldToScreen(dummyCoords, testDummy.getWidth(), testDummy.getHeight(), SCREEN_WIDTH, SCREEN_HEIGHT);
+			testDummy.refeshScreenCoords(dummyCoords);
 
 			SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
 			SDL_RenderClear(gRenderer);
@@ -105,9 +99,9 @@ int main(int argc, char* argv[]){
 			
 			SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0xFF, 0xFF);
 			SDL_RenderFillRect(gRenderer, &gPlayer);
-
+			
 			SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-			SDL_RenderFillRect(gRenderer, &tempRect);
+			SDL_RenderFillRect(gRenderer, testDummy.getScreenRect());
 
 			SDL_RenderPresent(gRenderer);
 		}

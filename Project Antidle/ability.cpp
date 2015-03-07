@@ -4,46 +4,44 @@
 using namespace std;
 
 Ability::Ability(int x, int y){
-	rect.x = x;
-	rect.y = y;
-	rect.w = 10;
-	rect.h = 10;
+	worldRect.x = x;
+	worldRect.y = y;
+	worldRect.w = 10;
+	worldRect.h = 10;
+
+	worldRect.w = 10;
+	worldRect.h = 10;
 }
 
 int Ability::getX(){
-	return rect.x;
+	return worldRect.x;
 }
 
 int Ability::getY(){
-	return rect.y;
+	return worldRect.y;
 }
 
 void Ability::setX(int x){
-	rect.x = x;
+	worldRect.x = x;
 }
 
 void Ability::setY(int y){
-	rect.y = y;
+	worldRect.y = y;
 }
 
 int Ability::getWidth(){
-	return rect.w;
+	return worldRect.w;
 }
 
 int Ability::getHeight(){
-	return rect.h;
+	return worldRect.h;
 }
 
-SDL_Rect* Ability::getRect(){
-	return &rect;
-}
-
-std::array Ability::getCoords(){
-	updateCoords();
-	return coords;
+SDL_Rect* Ability::getWorldRect(){
+	return &worldRect;
 }
 
 void Ability::updateCoords(){
-	coords[0] = rect.x;
-	coords[1] = rect.y;
+	coords[0] = worldRect.x;
+	coords[1] = worldRect.y;
 }

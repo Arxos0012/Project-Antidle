@@ -2,21 +2,21 @@
 #define ENEMY_H
 
 #include <SDL.h>
-#include <SDL_timer.h>
 
 class Enemy{
 public:
 	Enemy(int x, int y);
-	int* getCoords();
-	void move(int target[]);
-	SDL_Rect* getRect();
+	void getCoords(int* coords);	//world based coordinates
+	void move(float* target, float time);
+	SDL_Rect* getScreenRect();
+	void refeshScreenCoords(int* coords);
+	int getWidth(){ return worldRect.w; }
+	int getHeight(){ return worldRect.h; }
 private:
-	SDL_Rect rect;
-	int moveSpeed;	//in pixels per second
-	Uint32 lastTime;
-	Uint32 currentTime;
-	int coordBuffer[2];
-	void refreshCoordBuffer(int x, int y);
+	SDL_Rect worldRect;
+	SDL_Rect screenRect;
+	int moveSpeed = 20;	//in pixels per second
+	float timeCollected = 0;
 };
 
 #endif

@@ -17,14 +17,22 @@ public:
 	void setY(int y);
 	int getWidth();
 	int getHeight();
-	SDL_Rect* getRect();
-	std::array<int, 2> const & getCoords(){
+	SDL_Rect* getWorldRect();
+	SDL_Rect* getScreenRect(){
+		return &screenRect;
+	}
+	void setScreenRect(int* coords){
+		screenRect.x = coords[0];
+		screenRect.y = coords[2];
+	}
+	int* getCoords(){
 		return coords;
 	}
 private:
 	void updateCoords();
-	std::array<int, 2> coords;
-	SDL_Rect rect;
+	int coords[2];
+	SDL_Rect worldRect;
+	SDL_Rect screenRect;
 };
 
 #endif

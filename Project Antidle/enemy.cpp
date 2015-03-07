@@ -1,36 +1,45 @@
 #include "Enemy.h"
 #include <math.h>
+#include <iostream>
 
 Enemy::Enemy(int x, int y){
-	rect.x = x;
-	rect.y = y;
-	rect.w = 100;
-	rect.h = 100;
-	lastTime = SDL_GetTicks();
+	worldRect.x = x;
+	worldRect.y = y;
+	worldRect.w = 25;
+	worldRect.h = 25;
+
+	screenRect.w = 25;
+	screenRect.h = 25;
 }
 
-void Enemy::move(int target[]){
-	currentTime = SDL_GetTicks();
-	float timePassed = (currentTime - lastTime) / 1000.0f;
-	lastTime = currentTime;
+void Enemy::move(float* target, float time){
+	timeCollected += time;
+	float distance = sqrt(pow(target[0] - worldRect.x, 2) + pow(target[1] - worldRect.y, 2));
+	if (distance == 0) return;
 
-	float distance = sqrt(pow((float)target[0] - rect.x, 2) + pow((float)target[1] - rect.y, 2));
-	float sin = (target[1] - rect.y) / distance;
-	float cos = (target[0] - rect.x) / distance;
+	float cos = (target[0] - worldRect.x) / distance;
+	float sin = (target[1] - worldRect.y) / distance;
 	
-	rect.x = (int)(cos*moveSpeed*timePassed);
-	rect.y = (int)(sin*moveSpeed*timePassed);
+	float xSpeed = cos*moveSpeed*time;
+	float ySpeed = sin*moveSpeed*time;
+
+	std::cout << cos << "," << sin << std::endl;
+
+	worldRect.x += xSpeed;
+	worldRect.y += ySpeed;
 }
 
-void Enemy::refreshCoordBuffer(int x, int y){
-	coordBuffer[0] = x;
-	coordBuffer[1] = y;
+
+void Enemy::getCoords(int* coords){
+	coords[0] = worldRect.x;
+	coords[1] = worldRect.y;
 }
 
-int* Enemy::getCoords(){
-	return coordBuffer;
+SDL_Rect* Enemy::getScreenRect(){
+	return &screenRect;
 }
 
-SDL_Rect* Enemy::getRect(){
-	return &rect;
+void Enemy::refeshScreenCoords(int* coords){
+	screenRect.x = coords[0];
+	screenRect.y = coords[1];
 }

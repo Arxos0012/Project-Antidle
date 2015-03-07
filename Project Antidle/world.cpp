@@ -1,4 +1,5 @@
 #include "World.h"
+#include<iostream>
 
 World::World(int width, int height){
 	mapRect.w = width;
@@ -17,14 +18,14 @@ int World::getHeight(){
 	return mapRect.h;
 }
 
-void World::coordWorldToScreen(float* coords, int screenWidth, int screenHeight){
-	coords[0] = screenWidth / 2 + coords[0];
-	coords[1] = screenHeight / 2 + coords[1];
+void World::coordWorldToScreen(int* coords, int width, int height, int screenWidth, int screenHeight){
+	coords[0] += (screenWidth - width) /2;
+	coords[1] += (screenHeight - height) / 2;
 }
 
-void World::coordScreenToWorld(float* coords, int screenWidth, int screenHeight){
-	coords[0] = coords[0] - screenWidth / 2;
-	coords[1] = coords[1] - screenHeight / 2;
+void World::coordScreenToWorld(int* coords, int width, int height, int screenWidth, int screenHeight){
+	coords[0] -= (screenWidth + width) / 2;
+	coords[1] -= (screenWidth + height) / 2;
 }
 
 void World::setX(int x){
