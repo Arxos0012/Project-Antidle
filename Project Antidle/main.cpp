@@ -9,6 +9,7 @@
 #include "World.h"
 #include "Enemy.h"
 #include "ability.h"
+#include "player.h"
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
@@ -18,6 +19,7 @@ int mouseX, mouseY;
 int MOVE_SPEED;	//movement speed of the player in pixels per second
 
 Keyboard gKeyboard;
+Player testPlayer;
 
 float player[] = { 0, 0 };
 
@@ -58,7 +60,11 @@ int main(int argc, char* argv[]){
 
 		Ability testAbility(200, 200);
 
+		std::cout << abilites.size() << "\n";
+
 		abilites[Ability::TEST_ABILITY] = testAbility;
+
+		std::cout << abilites.size() << "\n";
 
 		SDL_Event e;
 		
@@ -73,23 +79,25 @@ int main(int argc, char* argv[]){
 				}
 				if (e.type == SDL_MOUSEBUTTONDOWN || SDL_MOUSEBUTTONUP || SDL_MOUSEMOTION){
 					SDL_GetMouseState(&mouseX, &mouseY);
-					
+
 					bool inScreen = true;
 					if (mouseX < 0 || mouseX > SCREEN_WIDTH) inScreen = false;
 					if (mouseY < 0 || mouseY > SCREEN_HEIGHT) inScreen = false;
 
 					if (inScreen){
+						int color[3];
 						std::map<int, Ability>::iterator it = playerAbilites.find(Ability::TEST_ABILITY);
 						if (e.type == SDL_MOUSEBUTTONDOWN && (playerAbilites.find(Ability::TEST_ABILITY) != playerAbilites.end())){
-							playerColor[0] = 0xAA;
-							playerColor[1] = 0xAA;
-							playerColor[2] = 0xAA;
+							color[0] = 0xAA;
+							color[1] = 0xAA;
+							color[2] = 0xAA;
 						}
 						if (e.type == SDL_MOUSEBUTTONUP){
-							playerColor[0] = 0x00;
-							playerColor[1] = 0xFF;
-							playerColor[2] = 0x00;
+							color[0] = 0x00;
+							color[1] = 0xFF;
+							color[2] = 0x00;
 						}
+						testPlayer.setPlayerColor(color);
 					}
 				}
 			}
@@ -101,37 +109,35 @@ int main(int argc, char* argv[]){
 			gKeyboard.update();
 
 			if (gKeyboard.getKeyState(SDL_SCANCODE_W)){
-				player[1] -= MOVE_SPEED * timePassed;
-				if (player[1] - gPlayer.h / 2 < -world.getHeight() / 2) player[1] = (-world.getHeight() + gPlayer.h) / 2.0f;
+				testPlayer.setY(testPlayer.getY() - (testPlayer.getMoveSpeed() * timePassed));
+				if (testPlayer.getY() - testPlayer.getHeight() / 2 < -world.getHeight() / 2) testPlayer.setY((-world.getHeight() + testPlayer.getHeight()) / 2.0f);
 			}
 			if (gKeyboard.getKeyState(SDL_SCANCODE_S)){
-				player[1] += MOVE_SPEED * timePassed;
-				if (player[1] + gPlayer.h / 2 > world.getHeight() / 2) player[1] = (world.getHeight() - gPlayer.h) / 2.0f;
+				testPlayer.setY(testPlayer.getY() + (testPlayer.getMoveSpeed() * timePassed));
+				if (testPlayer.getY() + testPlayer.getHeight() / 2 > world.getHeight() / 2) testPlayer.setY((world.getHeight() - testPlayer.getHeight()) / 2.0f);
 			}
 			if (gKeyboard.getKeyState(SDL_SCANCODE_A)){
-				player[0] -= MOVE_SPEED * timePassed;
-				if (player[0] - gPlayer.w / 2 < -world.getWidth() / 2) player[0] = (-world.getWidth() + gPlayer.w) / 2.0f;
+				testPlayer.setX(testPlayer.getX() - (testPlayer.getMoveSpeed() * timePassed));
+				if (testPlayer.getX() - testPlayer.getWidth() / 2 < -world.getWidth() / 2) testPlayer.setX((-world.getWidth() + testPlayer.getWidth()) / 2.0f);
 			}
 			if (gKeyboard.getKeyState(SDL_SCANCODE_D)){
-				player[0] += MOVE_SPEED * timePassed;
-				if (player[0] + gPlayer.w / 2 > world.getWidth() / 2) player[0] = (world.getWidth() - gPlayer.w) / 2.0f;
+				testPlayer.setX(testPlayer.getX() + (testPlayer.getMoveSpeed() * timePassed));
+				if (testPlayer.getX() + testPlayer.getWidth() / 2 > world.getWidth() / 2) testPlayer.setX((world.getWidth() - testPlayer.getWidth()) / 2.0f);
 			}
 
-			world.setX((int)((SCREEN_WIDTH - world.getWidth()) / 2 - player[0]));
-			world.setY((int)((SCREEN_HEIGHT - world.getHeight()) / 2 - player[1]));
+			world.setX((int)((SCREEN_WIDTH - world.getWidth()) / 2 - testPlayer.getX()));
+			world.setY((int)((SCREEN_HEIGHT - world.getHeight()) / 2 - testPlayer.getY()));
 
 			std::map<int, Ability>::iterator jt;
-			for (jt = abilites.begin(); jt != abilites.end(); jt++){
-				float distance = sqrt(pow(player[0] - jt->second.getX(), 2) + pow(player[1] - jt->second.getY(), 2));
-				if (distance <= 25 && abilites.size() > 0){
-					playerAbilites[jt->first] = jt->second;
-					//abilites.erase(jt->first);
+			if (abilites.size() > 0){
+				for (jt = abilites.begin(); jt != abilites.end(); jt++){
+					float distance = sqrt(pow(player[0] - jt->second.getX(), 2) + pow(player[1] - jt->second.getY(), 2));
+					if (distance <= 25 && abilites.size() > 0){
+						playerAbilites[jt->first] = jt->second;
+						abilites.erase(jt->first);
+						if (abilites.size() == 0) break;
+					}
 				}
-			}
-
-			std::map<int, Ability>::iterator kt;
-			for (kt = playerAbilites.begin(); kt != playerAbilites.end(); kt++){
-				std::cout << kt->second.name() << "\n";
 			}
 
 			testDummy.move(player, timePassed);
@@ -165,6 +171,11 @@ int main(int argc, char* argv[]){
 			}
 
 			SDL_RenderPresent(gRenderer);
+
+			std::string title = "Project Antidle | fps " + std::to_string((int)(1 / timePassed));
+			const char* finalTitle = title.c_str();
+
+			SDL_SetWindowTitle(gWindow, finalTitle);
 		}
 	}
 

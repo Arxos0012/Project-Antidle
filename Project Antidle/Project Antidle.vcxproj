@@ -71,12 +71,14 @@
     <ClCompile Include="ability.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="player.cpp" />
     <ClCompile Include="world.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ability.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="keyboard.h" />
+    <ClInclude Include="player.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
