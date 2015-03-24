@@ -1,27 +1,31 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <SDL.h>
+#include "entity.h"
 
-class Player{
+class Player : public Entity{
 public:
-	Player(int x, int y, int screenWidth, int screenHeight);
-	int getX();
-	int getY();
+	Player(int x, int y, int w, int h, int worldWidth, int worldHeight, int screenWidth, int screenHeight, std::string name = "generic player") : Entity(x, y, w, h, name){
+		screenRect.x = (screenWidth - w) / 2;
+		screenRect.y = (screenHeight - h) / 2;
+		this->screenWidth = screenWidth;
+		this->screenHeight = screenHeight;
+		this->worldWidth = worldWidth;
+		this->worldHeight = worldHeight;
+		this->type = PLAYER;
+	}
 	void setX(int x);
 	void setY(int y);
-	int* getPlayerColor();
-	void setPlayerColor(int color[]);
-	void setMoveSpeed(int moveSpeed);
-	int getMoveSpeed();
-	int getWidth(){ return screenRect.w; }
-	int getHeight(){ return screenRect.h; }
+
+	void moveLeft(int worldWidth, float time);
+	void moveRight(int worldWidth, float time);
+	void moveUp(int worldHeight, float time);
+	void moveDown(int worldHeight, float time);
 
 private:
-	SDL_Rect worldRect;
-	SDL_Rect screenRect;
-	int color[] = { 0x00, 0xFF, 0x00 };
-	int MOVE_SPEED = 500;
+	int screenWidth, screenHeight, worldWidth, worldHeight;
+	float x = 0, y = 0;
+	const int MOVESPEED = 100;	//pixels per second
 };
 
 #endif

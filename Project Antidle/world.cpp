@@ -1,9 +1,14 @@
 #include "World.h"
 #include<iostream>
 
-World::World(int width, int height){
+World::World(int width, int height, int screenWidth, int screenHeight){
 	mapRect.w = width;
 	mapRect.h = height;
+	mapRect.x = (screenWidth - mapRect.w) / 2;
+	mapRect.y = (screenHeight - mapRect.h) / 2;
+
+	this->screenWidth = screenWidth;
+	this->screenHeight = screenHeight;
 }
 
 SDL_Rect* World::getMapRect(){
@@ -28,10 +33,7 @@ void World::coordScreenToWorld(int* coords, int width, int height, int screenWid
 	coords[1] -= (screenWidth + height) / 2;
 }
 
-void World::setX(int x){
-	mapRect.x = x;
-}
-
-void World::setY(int y){
-	mapRect.y = y;
+void World::resetMap(Player& player){
+	mapRect.x = (screenWidth - mapRect.w) / 2 - player.getX();
+	mapRect.y = (screenHeight - mapRect.h) / 2 - player.getY();
 }

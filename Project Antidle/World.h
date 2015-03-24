@@ -3,10 +3,11 @@
 
 #include <SDL.h>
 #include <array>
+#include "player.h"
 
 class World{
 public:
-	World(int width, int height);
+	World(int width, int height, int screenWidth, int screenHeight);
 	int getWidth();
 	int getHeight();
 
@@ -15,9 +16,9 @@ public:
 
 	SDL_Rect* getMapRect();
 
-	void setX(int x);
-	void setY(int y);
+	void resetMap(Player& player);
 private:
+	int screenWidth, screenHeight;
 	SDL_Rect mapRect;
 	float buffercoords;
 };
