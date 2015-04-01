@@ -1,7 +1,9 @@
 #ifndef ABILITY_H
 #define ABILITY_H
 
-#include "player.h"
+#include "entity.h"
+
+class Player;
 
 class Ability : public Entity{
 public:

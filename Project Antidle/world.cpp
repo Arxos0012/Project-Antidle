@@ -1,5 +1,5 @@
 #include "World.h"
-#include<iostream>
+#include "player.h"
 
 World::World(int width, int height, int screenWidth, int screenHeight){
 	mapRect.w = width;

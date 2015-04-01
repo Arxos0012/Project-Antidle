@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "player.h"
 
 void Enemy::move(Player &player, float time){
 	float distance = sqrt(pow(x - player.getX(), 2) + pow(y - player.getY(), 2));

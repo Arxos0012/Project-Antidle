@@ -3,7 +3,9 @@
 
 #include <SDL.h>
 #include <array>
-#include "player.h"
+#include <iostream>
+
+class Player;
 
 class World{
 public:

@@ -4,6 +4,8 @@
 #include "entity.h"
 #include <map>
 
+class Ability;
+
 class Player : public Entity{
 public:
 	Player(int x, int y, int w, int h, int worldWidth, int worldHeight, int screenWidth, int screenHeight, std::string name = "generic player") : Entity(x, y, w, h, screenWidth, screenHeight, name){
@@ -20,11 +22,19 @@ public:
 	void moveRight(float time);
 	void moveUp(float time);
 	void moveDown(float time);
+	
+	int numberOfAbilites(){ return abilities.size(); }
+
+	void addAbility(Ability ability);
+	void removeAbiltiy(std::string name);
+
+	Ability* getAbiltiy(std::string name);
 
 private:
 	int worldWidth, worldHeight;
 	float x = 0, y = 0;
 	const int MOVESPEED = 500;	//pixels per second
+	std::map<std::string , Ability> abilities;
 };
 
 #endif

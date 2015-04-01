@@ -5,6 +5,8 @@
 #include <string>
 #include <iostream>
 
+#pragma once
+
 class Entity{
 public:
 	Entity(int x, int y, int w, int h, int screenWidth, int screenHeight, std::string name = "generic entity"){
