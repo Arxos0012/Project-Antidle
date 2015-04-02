@@ -16,25 +16,25 @@ void Player::setY(int y){
 	else worldRect.y = y;
 }
 
-void Player::moveLeft(int worldWidth, float time){
+void Player::moveLeft(float time){
 	x -= MOVESPEED*time;
 	if (x < (-worldWidth + worldRect.w) / 2) x = (-worldWidth + worldRect.w) / 2;
 	worldRect.x = (int)x;
 }
 
-void Player::moveRight(int worldWidth, float time){
+void Player::moveRight(float time){
 	x += MOVESPEED*time;
 	if (x >(worldWidth - worldRect.w) / 2) x = (worldWidth - worldRect.w) / 2;
 	worldRect.x = (int)x;
 }
 
-void Player::moveUp(int worldHeight, float time){
+void Player::moveUp(float time){
 	y -= MOVESPEED*time;
 	if (y < (-worldHeight + worldRect.h) / 2) y = (-worldHeight + worldRect.h) / 2;
 	worldRect.y = (int)y;
 }
 
-void Player::moveDown(int worldHeight, float time){
+void Player::moveDown(float time){
 	y += MOVESPEED*time;
 	if (y >(worldHeight - worldRect.h) / 2) y = (worldHeight - worldRect.h) / 2;
 	worldRect.y = (int)y;

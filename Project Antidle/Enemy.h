@@ -1,25 +1,26 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-#include <SDL.h>
+#include "player.h"
 
-class Enemy{
+class Enemy : public Entity{
 public:
-	Enemy(int x, int y);
-	void getCoords(int* coords);	//world based coordinates
-	void move(float* target, float time);
-	SDL_Rect* getScreenRect();
-	void refeshScreenCoords(int* coords);
-	int getWidth(){ return worldRect.w; }
-	int getHeight(){ return worldRect.h; }
+	void update(Player &player){
+		screenRect.x = (screenWidth / 2 + worldRect.x) - player.getX() - worldRect.w / 2;
+		screenRect.y = (screenHeight / 2 + worldRect.y) - player.getY() - worldRect.h / 2;
+	}
+
+	void move(Player &player, float time);
+
+	Enemy(int x, int y, int w, int h, int screenWidth, int screenHeight, Player &player, std::string name = "generic enemy") : Entity(x, y, w, h, screenWidth, screenHeight, name){
+		this->type = ENEMY;
+		update(player);
+		this->x = x;
+		this->y = y;
+	}
+
 private:
-	SDL_Rect worldRect;
-	SDL_Rect screenRect;
-	float moveSpeed = 100;	//in pixels per second
-	float timeCollected = 0;
-
-	float collectiveX = 0;
-	float collectiveY = 0;
+	const int MOVESPEED = 100;
+	float x, y;
 };
-
 #endif

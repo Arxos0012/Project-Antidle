@@ -1,11 +1,16 @@
 #include <iostream>
 #include <string>
+#include <map>
+
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_timer.h>
+
 #include "keyboard.h"
 #include "World.h"
 #include "player.h"
+#include "ability.h"
+#include "Enemy.h"
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
@@ -21,7 +26,6 @@ void close();		//frees up all memory at the end
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
 
-
 int main(int argc, char* argv[]){
 	if (!init()){
 		std::cerr << "Falied to initialize!\n";
@@ -34,6 +38,8 @@ int main(int argc, char* argv[]){
 
 		World world(550, 550, SCREEN_WIDTH, SCREEN_HEIGHT);
 		Player player(0, 0, 50, 50, world.getWidth(), world.getHeight(), SCREEN_WIDTH, SCREEN_HEIGHT);
+		Ability ability(-100, -100, 10, 10, SCREEN_WIDTH, SCREEN_HEIGHT, player);
+		Enemy enemy(100, -100, 50, 50, SCREEN_WIDTH, SCREEN_HEIGHT, player);
 
 		SDL_Event e;
 		
@@ -64,12 +70,16 @@ int main(int argc, char* argv[]){
 
 			gKeyboard.update();
 
-			if (gKeyboard.getKeyState(SDL_SCANCODE_W)) player.moveUp(world.getHeight(), timePassed);
-			if (gKeyboard.getKeyState(SDL_SCANCODE_S)) player.moveDown(world.getHeight(), timePassed);
-			if (gKeyboard.getKeyState(SDL_SCANCODE_A)) player.moveLeft(world.getWidth(), timePassed);
-			if (gKeyboard.getKeyState(SDL_SCANCODE_D)) player.moveRight(world.getWidth(), timePassed);
+			if (gKeyboard.getKeyState(SDL_SCANCODE_W)) player.moveUp(timePassed);
+			if (gKeyboard.getKeyState(SDL_SCANCODE_S)) player.moveDown(timePassed);
+			if (gKeyboard.getKeyState(SDL_SCANCODE_A)) player.moveLeft(timePassed);
+			if (gKeyboard.getKeyState(SDL_SCANCODE_D)) player.moveRight(timePassed);
 				
-			world.resetMap(player);
+			world.update(player);
+			ability.update(player);
+
+			enemy.move(player, timePassed);
+			enemy.update(player);
 
 			SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
 			SDL_RenderClear(gRenderer);
@@ -79,7 +89,13 @@ int main(int argc, char* argv[]){
 
 			SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0xFF, 0xFF);
 			SDL_RenderFillRect(gRenderer, player.getScreenRect());
-			
+
+			SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0xFF, 0xFF);
+			SDL_RenderFillRect(gRenderer, ability.getScreenRect());
+
+			SDL_SetRenderDrawColor(gRenderer, 0x00, 0xFF, 0x00, 0xFF);
+			SDL_RenderFillRect(gRenderer, enemy.getScreenRect());
+
 			SDL_RenderPresent(gRenderer);
 
 			if (cumulativeTime > 1){

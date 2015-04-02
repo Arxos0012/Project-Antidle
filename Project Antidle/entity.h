@@ -7,12 +7,14 @@
 
 class Entity{
 public:
-	Entity(int x, int y, int w, int h, std::string name = "generic entity"){
+	Entity(int x, int y, int w, int h, int screenWidth, int screenHeight, std::string name = "generic entity"){
 		worldRect.x = x;
 		worldRect.y = y;
 		worldRect.w = screenRect.w = w;
 		worldRect.h = screenRect.h = h;
 		this->name = name;
+		this->screenWidth = screenWidth;
+		this->screenHeight = screenHeight;
 	}
 
 	int getX(){ return worldRect.x; }
@@ -30,7 +32,7 @@ public:
 protected:
 	SDL_Rect worldRect, screenRect;
 	std::string name;
-	int type;
+	int type, screenWidth, screenHeight;
 	enum Types{
 		PLAYER, ENEMY, ABILITY, OBJECT, PROJECTILE
 	};

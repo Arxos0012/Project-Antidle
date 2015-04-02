@@ -33,7 +33,7 @@ void World::coordScreenToWorld(int* coords, int width, int height, int screenWid
 	coords[1] -= (screenWidth + height) / 2;
 }
 
-void World::resetMap(Player& player){
+void World::update(Player& player){
 	mapRect.x = (screenWidth - mapRect.w) / 2 - player.getX();
 	mapRect.y = (screenHeight - mapRect.h) / 2 - player.getY();
 }

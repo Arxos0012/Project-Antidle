@@ -16,7 +16,7 @@ public:
 
 	SDL_Rect* getMapRect();
 
-	void resetMap(Player& player);
+	void update(Player& player);
 private:
 	int screenWidth, screenHeight;
 	SDL_Rect mapRect;
