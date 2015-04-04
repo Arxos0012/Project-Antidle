@@ -4,6 +4,7 @@
 #include "entity.h"
 #include <map>
 #include "ability.h"
+#include "keyboard.h"
 
 class Player : public Entity{
 public:
@@ -14,13 +15,14 @@ public:
 		this->worldHeight = worldHeight;
 		this->type = PLAYER;
 	}
+
+	void setKeyboard(Keyboard &keyboard){ this->keyboard = keyboard;  }
+
+	//different from other update functions, checks for keyboard inputs
+	void update(float time);
+
 	void setX(int x);
 	void setY(int y);
-
-	void moveLeft(float time);
-	void moveRight(float time);
-	void moveUp(float time);
-	void moveDown(float time);
 	
 	int numberOfAbilites(){ return abilities.size(); }
 
@@ -30,10 +32,16 @@ public:
 	Ability* getAbiltiy(std::string &name);
 
 private:
+	Keyboard keyboard;
 	int worldWidth, worldHeight;
 	float x = 0, y = 0;
 	const int MOVESPEED = 500;	//pixels per second
-	std::map<std::string , Ability> abilities;
+	std::map<std::string, Ability> abilities;
+
+	void moveLeft(float time);
+	void moveRight(float time);
+	void moveUp(float time);
+	void moveDown(float time);
 };
 
 #endif

@@ -10,12 +10,21 @@ public:
 		screenRect.y = (screenHeight / 2 + worldRect.y) - playerY;
 	}
 
+	void markAsPlayerOwned(){ playerOwned = true; }
+
+	void setKey(int scanCode){ keyScanCode = scanCode; }
+
+	void performAction(){ std::cout << "Doin' my thang!!!\n"; }
+
+	int getScanCode(){ return keyScanCode; }
+
 	Ability(int x, int y, int w, int h, int screenWidth, int screenHeight, int playerX, int playerY, std::string name = "generic ability") : Entity(x, y, w, h, screenWidth, screenHeight, name){
 		this->type = ABILITY;
 		update(playerX, playerY);
 	}
 private:
-	
+	bool playerOwned = false;
+	int keyScanCode;
 };
 
 #endif

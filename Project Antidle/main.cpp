@@ -43,6 +43,7 @@ int main(int argc, char* argv[]){
 		Enemy enemy(100, -100, 50, 50, SCREEN_WIDTH, SCREEN_HEIGHT, player);
 
 		Ability ability(-100, -100, 10, 10, SCREEN_WIDTH, SCREEN_HEIGHT, player.getX(), player.getY(), "Test Ability");
+		ability.setKey(SDL_SCANCODE_E);
 
 		world.addAbility(ability);
 
@@ -68,40 +69,60 @@ int main(int argc, char* argv[]){
 				}
 			}
 
+			//getting time passed
 			currentTime = SDL_GetTicks();
 			timePassed = (currentTime - lastTime) / 1000.0f;	//division for conversion from milliseconds to seconds
 			cumulativeTime += timePassed;
 			lastTime = currentTime;
 
-			gKeyboard.update();
-
-			if (gKeyboard.getKeyState(SDL_SCANCODE_W)) player.moveUp(timePassed);
-			if (gKeyboard.getKeyState(SDL_SCANCODE_S)) player.moveDown(timePassed);
-			if (gKeyboard.getKeyState(SDL_SCANCODE_A)) player.moveLeft(timePassed);
-			if (gKeyboard.getKeyState(SDL_SCANCODE_D)) player.moveRight(timePassed);
-				
+			//player input
+			player.update(timePassed);
+			
+			//moving things in the world (and the world of course) based on time and player's position
 			world.update(player);
 
 			enemy.move(player, timePassed);
 			enemy.update(player);
 
+			//correctly managing abilities between the world and the player
+			std::map<std::string, Ability>::iterator at;
+			for (at = world.getAbilities()->begin(); at != world.getAbilities()->end(); at++){
+				float distance = sqrt(pow(at->second.getX() - player.getX(), 2) + pow(at->second.getY() - player.getY(), 2));
+				if (distance <= 20){
+					std::string name = at->first;
+					Ability* transfer = world.getAbility(name);
+					player.addAbility(*transfer);
+					world.removeAbility(name);
+					if (world.getAbilities()->size() == 0) break;
+				}
+			}
+
+			//clearing screen
 			SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
 			SDL_RenderClear(gRenderer);
 			
+			//drawing the world
 			SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
 			SDL_RenderFillRect(gRenderer, world.getMapRect());
 
-			SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0xFF, 0xFF);
-			SDL_RenderFillRect(gRenderer, player.getScreenRect());
-
+			//drawing the abilites
 			SDL_SetRenderDrawColor(gRenderer, 0x00, 0xFF, 0x00, 0xFF);
 			std::map<std::string, Ability>::iterator it;
 			for (it = world.getAbilities()->begin(); it != world.getAbilities()->end(); it++){
 				SDL_RenderFillRect(gRenderer, it->second.getScreenRect());
 			}
 
+			//drawing the enemy
+			SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0xFF, 0xFF);
+			SDL_RenderFillRect(gRenderer, enemy.getScreenRect());
+
+			//drawing the player
+			SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0xFF, 0xFF);
+			SDL_RenderFillRect(gRenderer, player.getScreenRect());
+
 			SDL_RenderPresent(gRenderer);
 
+			//Displays current FPS of game in the title every second
 			if (cumulativeTime > 1){
 				std::string title = "Project Antidle | fps " + std::to_string(frames / cumulativeTime);
 				const char* finalTitle = title.c_str();

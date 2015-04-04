@@ -43,6 +43,7 @@ void Player::moveDown(float time){
 void Player::addAbility(Ability &ability){
 	std::map<std::string, Ability>::iterator it = abilities.begin();
 	abilities.insert(it, std::pair<std::string, Ability>(ability.getName(), ability));
+	abilities.at(ability.getName()).markAsPlayerOwned();
 }
 
 void Player::removeAbiltiy(std::string &name){
@@ -61,4 +62,18 @@ Ability* Player::getAbiltiy(std::string &name){
 		if (it->first == name) return &(it->second);
 	}
 	return NULL;
+}
+
+void Player::update(float time){
+	keyboard.update();
+
+	if (keyboard.getKeyState(SDL_SCANCODE_W)) moveUp(time);
+	if (keyboard.getKeyState(SDL_SCANCODE_S)) moveDown(time);
+	if (keyboard.getKeyState(SDL_SCANCODE_A)) moveLeft(time);
+	if (keyboard.getKeyState(SDL_SCANCODE_D)) moveRight(time);
+
+	std::map<std::string, Ability>::iterator it;
+	for (it = abilities.begin(); it != abilities.end(); it++){
+		if (keyboard.getKeyState(it->second.getScanCode())) it->second.performAction();
+	}
 }
