@@ -78,6 +78,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="keyboard.h" />
+    <ClInclude Include="Object.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>

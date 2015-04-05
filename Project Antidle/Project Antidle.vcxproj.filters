@@ -16,12 +16,6 @@
     <Filter Include="Header Files\Entity">
       <UniqueIdentifier>{c0b2c0d1-2a05-4dd6-a8b2-fa8a8df3f5b7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Entity\Abilities">
-      <UniqueIdentifier>{af43796b-fedd-44d3-82f8-f8250b4305d7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Entity">
-      <UniqueIdentifier>{5c3901d0-0846-4151-b73a-ec40cea83c7e}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -31,10 +25,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="player.cpp">
-      <Filter>Source Files\Entity</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="enemy.cpp">
-      <Filter>Source Files\Entity</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -54,6 +48,9 @@
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
     <ClInclude Include="player.h">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
   </ItemGroup>
