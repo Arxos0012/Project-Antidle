@@ -3,8 +3,7 @@
 
 #include "entity.h"
 #include <map>
-
-class Ability;
+#include "ability.h"
 
 class Player : public Entity{
 public:
@@ -25,10 +24,10 @@ public:
 	
 	int numberOfAbilites(){ return abilities.size(); }
 
-	void addAbility(Ability ability);
-	void removeAbiltiy(std::string name);
+	void addAbility(Ability &ability);
+	void removeAbiltiy(std::string &name);
 
-	Ability* getAbiltiy(std::string name);
+	Ability* getAbiltiy(std::string &name);
 
 private:
 	int worldWidth, worldHeight;

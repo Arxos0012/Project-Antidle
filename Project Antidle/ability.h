@@ -3,18 +3,16 @@
 
 #include "entity.h"
 
-class Player;
-
 class Ability : public Entity{
 public:
-	void update(Player &player){
-		screenRect.x = (screenWidth / 2 + worldRect.x) - player.getX();
-		screenRect.y = (screenHeight / 2 + worldRect.y) - player.getY();
+	void update(int playerX, int playerY){
+		screenRect.x = (screenWidth / 2 + worldRect.x) - playerX;
+		screenRect.y = (screenHeight / 2 + worldRect.y) - playerY;
 	}
 
-	Ability(int x, int y, int w, int h, int screenWidth, int screenHeight, Player &player, std::string name = "generic ability") : Entity(x, y, w, h, screenWidth, screenHeight, name){
+	Ability(int x, int y, int w, int h, int screenWidth, int screenHeight, int playerX, int playerY, std::string name = "generic ability") : Entity(x, y, w, h, screenWidth, screenHeight, name){
 		this->type = ABILITY;
-		update(player);
+		update(playerX, playerY);
 	}
 private:
 	

@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include <map>
+#include <vector>
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -23,6 +23,8 @@ bool init();		//initalizes all SDL stuff
 bool loadMedia();	//loads all assets
 void close();		//frees up all memory at the end
 
+void addAbilitiesToWorld(World &world, Player &player);
+
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
 
@@ -38,8 +40,11 @@ int main(int argc, char* argv[]){
 
 		World world(550, 550, SCREEN_WIDTH, SCREEN_HEIGHT);
 		Player player(0, 0, 50, 50, world.getWidth(), world.getHeight(), SCREEN_WIDTH, SCREEN_HEIGHT);
-		Ability ability(-100, -100, 10, 10, SCREEN_WIDTH, SCREEN_HEIGHT, player);
 		Enemy enemy(100, -100, 50, 50, SCREEN_WIDTH, SCREEN_HEIGHT, player);
+
+		Ability ability(-100, -100, 10, 10, SCREEN_WIDTH, SCREEN_HEIGHT, player.getX(), player.getY(), "Test Ability");
+
+		world.addAbility(ability);
 
 		SDL_Event e;
 		
@@ -76,7 +81,6 @@ int main(int argc, char* argv[]){
 			if (gKeyboard.getKeyState(SDL_SCANCODE_D)) player.moveRight(timePassed);
 				
 			world.update(player);
-			ability.update(player);
 
 			enemy.move(player, timePassed);
 			enemy.update(player);
@@ -90,11 +94,11 @@ int main(int argc, char* argv[]){
 			SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0xFF, 0xFF);
 			SDL_RenderFillRect(gRenderer, player.getScreenRect());
 
-			SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0xFF, 0xFF);
-			SDL_RenderFillRect(gRenderer, ability.getScreenRect());
-
 			SDL_SetRenderDrawColor(gRenderer, 0x00, 0xFF, 0x00, 0xFF);
-			SDL_RenderFillRect(gRenderer, enemy.getScreenRect());
+			std::map<std::string, Ability>::iterator it;
+			for (it = world.getAbilities()->begin(); it != world.getAbilities()->end(); it++){
+				SDL_RenderFillRect(gRenderer, it->second.getScreenRect());
+			}
 
 			SDL_RenderPresent(gRenderer);
 

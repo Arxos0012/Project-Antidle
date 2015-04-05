@@ -6,10 +6,7 @@
 
 class Enemy : public Entity{
 public:
-	void update(Player &player){
-		screenRect.x = (screenWidth / 2 + worldRect.x) - player.getX() - worldRect.w / 2;
-		screenRect.y = (screenHeight / 2 + worldRect.y) - player.getY() - worldRect.h / 2;
-	}
+	void update(Player &player);
 
 	void move(Player &player, float time);
 

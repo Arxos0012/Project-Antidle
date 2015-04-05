@@ -1,5 +1,4 @@
 #include "player.h"
-#include "ability.h"
 
 void Player::setX(int x){
 	if (abs(x) > (worldWidth - worldRect.w) / 2){
@@ -41,12 +40,12 @@ void Player::moveDown(float time){
 	worldRect.y = (int)y;
 }
 
-void Player::addAbility(Ability ability){
+void Player::addAbility(Ability &ability){
 	std::map<std::string, Ability>::iterator it = abilities.begin();
 	abilities.insert(it, std::pair<std::string, Ability>(ability.getName(), ability));
 }
 
-void Player::removeAbiltiy(std::string name){
+void Player::removeAbiltiy(std::string &name){
 	std::map<std::string, Ability>::iterator it;
 	for (it = abilities.begin(); it != abilities.end(); it++){
 		if (it->first == name){
@@ -56,7 +55,7 @@ void Player::removeAbiltiy(std::string name){
 	}
 }
 
-Ability* Player::getAbiltiy(std::string name){
+Ability* Player::getAbiltiy(std::string &name){
 	std::map<std::string, Ability>::iterator it;
 	for (it = abilities.begin(); it != abilities.end(); it++){
 		if (it->first == name) return &(it->second);

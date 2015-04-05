@@ -1,5 +1,9 @@
 #include "Enemy.h"
-#include "player.h"
+
+void Enemy::update(Player &player){
+	screenRect.x = (screenWidth / 2 + worldRect.x) - player.getX() - worldRect.w / 2;
+	screenRect.y = (screenHeight / 2 + worldRect.y) - player.getY() - worldRect.h / 2;
+}
 
 void Enemy::move(Player &player, float time){
 	float distance = sqrt(pow(x - player.getX(), 2) + pow(y - player.getY(), 2));

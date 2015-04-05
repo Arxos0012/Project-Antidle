@@ -4,8 +4,10 @@
 #include <SDL.h>
 #include <array>
 #include <iostream>
+#include <map>
 
 class Player;
+class Ability;
 
 class World{
 public:
@@ -13,16 +15,22 @@ public:
 	int getWidth();
 	int getHeight();
 
-	void coordWorldToScreen(int* coords, float* player, int width, int height, int screenWidth, int screenHeight);
-	void coordScreenToWorld(int* coords, int width, int height, int screenWidth, int screenHeight);
-
 	SDL_Rect* getMapRect();
 
 	void update(Player& player);
+
+	void addAbility(Ability &ability);
+	void removeAbility(std::string &name);
+
+	Ability* getAbility(std::string &name);
+
+	std::map<std::string, Ability>* getAbilities();
+
 private:
 	int screenWidth, screenHeight;
 	SDL_Rect mapRect;
 	float buffercoords;
+	std::map<std::string, Ability> abilities;
 };
 
 #endif
