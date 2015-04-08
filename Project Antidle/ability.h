@@ -10,6 +10,11 @@ public:
 		screenRect.y = (screenHeight / 2 + worldRect.y) - playerY;
 	}
 
+	void render(SDL_Renderer* renderer){
+		SDL_Point center = { screenRect.x + screenRect.w / 2, screenRect.y + screenRect.h / 2 };
+		texture.render(screenRect.x, screenRect.y, renderer, NULL, 0, &center);
+	}
+
 	void markAsPlayerOwned(){ playerOwned = true; }
 
 	void setKey(int scanCode){ keyScanCode = scanCode; }
@@ -18,7 +23,7 @@ public:
 
 	int getScanCode(){ return keyScanCode; }
 
-	Ability(SDL_Renderer* renderer, int x, int y, int w, int h, int screenWidth, int screenHeight, int playerX, int playerY, std::string texturePath, std::string name = "generic ability") : Entity(renderer, x, y, w, h, screenWidth, screenHeight, texturePath, name){
+	Ability(SDL_Renderer* renderer, int x, int y, int screenWidth, int screenHeight, int playerX, int playerY, std::string texturePath, std::string name = "generic ability") : Entity(renderer, x, y, screenWidth, screenHeight, texturePath, name){
 		this->type = ABILITY;
 		update(playerX, playerY);
 	}

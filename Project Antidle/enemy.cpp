@@ -5,6 +5,11 @@ void Enemy::update(Player &player){
 	screenRect.y = (screenHeight / 2 + worldRect.y) - player.getY() - worldRect.h / 2;
 }
 
+void Enemy::render(SDL_Renderer* renderer){
+	SDL_Point center = { screenRect.x + screenRect.w / 2, screenRect.y + screenRect.h / 2 };
+	texture.render(screenRect.x, screenRect.y, renderer, NULL, 0, &center);
+}
+
 void Enemy::move(Player &player, float time){
 	float distance = sqrt(pow(x - player.getX(), 2) + pow(y - player.getY(), 2));
 	if (distance <= worldRect.w/2) return;

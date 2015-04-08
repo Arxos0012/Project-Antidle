@@ -2,6 +2,7 @@
 #define TEXTURE_H
 
 #include <SDL.h>
+#include <SDL_image.h>
 #include <string>
 
 class Texture{
@@ -9,7 +10,7 @@ public:
 	Texture();
 	~Texture();
 
-	void loadTexture(std::string path, SDL_Renderer* renderer);	//loads texture from a file
+	bool loadTexture(std::string path, SDL_Renderer* renderer);	//loads texture from a file
 
 	void setColorMod(Uint8 r, Uint8 g, Uint8 b);	//sets color modulation
 	void setAlphaMod(Uint8 a);						//sets alpha modulation
@@ -24,6 +25,7 @@ public:
 
 private:
 	SDL_Texture* texture;
+	std::string path;
 	int width, height;
 };
 

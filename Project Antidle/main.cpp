@@ -10,8 +10,8 @@
 #include "World.h"
 #include "player.h"
 
-//#include "ability.h"
-//#include "Enemy.h"
+#include "ability.h"
+#include "Enemy.h"
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
@@ -40,13 +40,13 @@ int main(int argc, char* argv[]){
 		bool quit = false;
 
 		World world(550, 550, SCREEN_WIDTH, SCREEN_HEIGHT);
-		Player player(gRenderer, 0, 0, 50, 50, world.getWidth(), world.getHeight(), SCREEN_WIDTH, SCREEN_HEIGHT, "apples");
-		//Enemy enemy(100, -100, 50, 50, SCREEN_WIDTH, SCREEN_HEIGHT, player);
+		Player player(gRenderer, 0, 0, world.getWidth(), world.getHeight(), SCREEN_WIDTH, SCREEN_HEIGHT, "player.png");
+		Enemy enemy(gRenderer, 100, -100, SCREEN_WIDTH, SCREEN_HEIGHT, player, "enemy.png");
 
-		//Ability ability(-100, -100, 10, 10, SCREEN_WIDTH, SCREEN_HEIGHT, player.getX(), player.getY(), "Test Ability");
-		//ability.setKey(SDL_SCANCODE_E);
+		Ability ability(gRenderer, -100, -100, SCREEN_WIDTH, SCREEN_HEIGHT, player.getX(), player.getY(), "test_ability.png", "Test Ability");
+		ability.setKey(SDL_SCANCODE_E);
 
-		//world.addAbility(ability);
+		world.addAbility(ability);
 
 		SDL_Event e;
 		
@@ -76,14 +76,18 @@ int main(int argc, char* argv[]){
 			cumulativeTime += timePassed;
 			lastTime = currentTime;
 
+			//clearing screen
+			SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
+			SDL_RenderClear(gRenderer);
+
 			//player input
-			player.update(gRenderer, timePassed);
+			player.update(timePassed);
 			
 			//moving things in the world (and the world of course) based on time and player's position
 			world.update(player);
 
-			//enemy.move(player, timePassed);
-			//enemy.update(player);
+			enemy.move(player, timePassed);
+			enemy.update(player);
 
 			//correctly managing abilities between the world and the player
 			std::map<std::string, Ability>::iterator at;
@@ -97,29 +101,19 @@ int main(int argc, char* argv[]){
 					if (world.getAbilities()->size() == 0) break;
 				}
 			}
-
-			//clearing screen
-			SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
-			SDL_RenderClear(gRenderer);
 			
 			//drawing the world
 			SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
 			SDL_RenderFillRect(gRenderer, world.getMapRect());
 
-			//drawing the abilites
-			SDL_SetRenderDrawColor(gRenderer, 0x00, 0xFF, 0x00, 0xFF);
+			player.render(gRenderer);	//rendering the player
+			enemy.render(gRenderer);	//rendering the enemy
+
+			//rendering the abilites
 			std::map<std::string, Ability>::iterator it;
 			for (it = world.getAbilities()->begin(); it != world.getAbilities()->end(); it++){
-				SDL_RenderFillRect(gRenderer, it->second.getScreenRect());
+				it->second.render(gRenderer);
 			}
-
-			/*drawing the enemy
-			SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0xFF, 0xFF);
-			SDL_RenderFillRect(gRenderer, enemy.getScreenRect());*/
-
-			/*drawing the player
-			SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0xFF, 0xFF);
-			SDL_RenderFillRect(gRenderer, player.getScreenRect());*/
 
 			SDL_RenderPresent(gRenderer);
 

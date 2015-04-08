@@ -11,21 +11,22 @@
 
 class Entity{
 public:
-	Entity(SDL_Renderer* renderer, int x, int y, int w, int h, int screenWidth, int screenHeight, std::string texturePath, std::string name = "generic entity"){
+	Entity(SDL_Renderer* renderer, int x, int y, int screenWidth, int screenHeight, std::string texturePath, std::string name = "generic entity"){
 		worldRect.x = x;
 		worldRect.y = y;
-		worldRect.w = screenRect.w = w;
-		worldRect.h = screenRect.h = h;
 		this->name = name;
 		this->screenWidth = screenWidth;
 		this->screenHeight = screenHeight;
-		texture = new Texture();
-		texture->loadTexture(texturePath, renderer);
+		if (!(texture.loadTexture(texturePath, renderer))) std::cerr << "Failed to load this texture: " << texturePath << "\n.";
+		worldRect.w = screenRect.w = texture.getWidth();
+		worldRect.h = screenRect.h = texture.getHeight();
+		std::cout << worldRect.w << ", " << worldRect.h << "\n";
 	}
 
-	virtual ~Entity(){
-		delete texture;
+	~Entity(){
+		std::cout << name << " is done!!!\n";
 	}
+
 
 	int getX(){ return worldRect.x; }
 	int getY(){ return worldRect.y; }
@@ -40,7 +41,7 @@ public:
 	int getType(){ return type; }						//return type of entity
 
 protected:
-	Texture* texture;
+	Texture texture;
 	SDL_Rect worldRect, screenRect;
 	std::string name;
 	int type, screenWidth, screenHeight;

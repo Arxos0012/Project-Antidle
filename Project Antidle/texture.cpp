@@ -1,4 +1,5 @@
 #include "texture.h"
+#include <iostream>
 
 Texture::Texture(){
 	texture = NULL;
@@ -7,6 +8,7 @@ Texture::Texture(){
 
 Texture::~Texture(){
 	free();
+	std::cout << path << "'s dead!!!\n";
 }
 
 void Texture::free(){
@@ -37,4 +39,32 @@ void Texture::render(int x, int y, SDL_Renderer* renderer, SDL_Rect* clip, doubl
 	}
 
 	SDL_RenderCopyEx(renderer, texture, clip, &renderQuad, angle, center, flip);
+}
+
+bool Texture::loadTexture(std::string path, SDL_Renderer* renderer){
+	free();
+	
+	SDL_Texture* newTexture = NULL;
+	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+
+	if (loadedSurface == NULL){
+		printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
+	}
+	else{
+		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0xFF, 0, 0xFF));
+		newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+		if (newTexture == NULL){
+			printf("Unable to create texture from surface %s! SDL Error %s\n", path.c_str(), SDL_GetError());
+		}
+		else{
+			width = loadedSurface->w;
+			height = loadedSurface->h;
+		}
+
+		SDL_FreeSurface(loadedSurface);
+	}
+
+	this->path = path;
+	texture = newTexture;
+	return texture != NULL;
 }
