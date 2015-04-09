@@ -9,8 +9,9 @@
 #include "keyboard.h"
 #include "World.h"
 #include "player.h"
-#include "ability.h"
-#include "Enemy.h"
+
+//#include "ability.h"
+//#include "Enemy.h"
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
@@ -39,13 +40,13 @@ int main(int argc, char* argv[]){
 		bool quit = false;
 
 		World world(550, 550, SCREEN_WIDTH, SCREEN_HEIGHT);
-		Player player(0, 0, 50, 50, world.getWidth(), world.getHeight(), SCREEN_WIDTH, SCREEN_HEIGHT);
-		Enemy enemy(100, -100, 50, 50, SCREEN_WIDTH, SCREEN_HEIGHT, player);
+		Player player(gRenderer, 0, 0, 50, 50, world.getWidth(), world.getHeight(), SCREEN_WIDTH, SCREEN_HEIGHT, "apples");
+		//Enemy enemy(100, -100, 50, 50, SCREEN_WIDTH, SCREEN_HEIGHT, player);
 
-		Ability ability(-100, -100, 10, 10, SCREEN_WIDTH, SCREEN_HEIGHT, player.getX(), player.getY(), "Test Ability");
-		ability.setKey(SDL_SCANCODE_E);
+		//Ability ability(-100, -100, 10, 10, SCREEN_WIDTH, SCREEN_HEIGHT, player.getX(), player.getY(), "Test Ability");
+		//ability.setKey(SDL_SCANCODE_E);
 
-		world.addAbility(ability);
+		//world.addAbility(ability);
 
 		SDL_Event e;
 		
@@ -76,13 +77,13 @@ int main(int argc, char* argv[]){
 			lastTime = currentTime;
 
 			//player input
-			player.update(timePassed);
+			player.update(gRenderer, timePassed);
 			
 			//moving things in the world (and the world of course) based on time and player's position
 			world.update(player);
 
-			enemy.move(player, timePassed);
-			enemy.update(player);
+			//enemy.move(player, timePassed);
+			//enemy.update(player);
 
 			//correctly managing abilities between the world and the player
 			std::map<std::string, Ability>::iterator at;
@@ -112,18 +113,19 @@ int main(int argc, char* argv[]){
 				SDL_RenderFillRect(gRenderer, it->second.getScreenRect());
 			}
 
-			//drawing the enemy
+			/*drawing the enemy
 			SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0xFF, 0xFF);
-			SDL_RenderFillRect(gRenderer, enemy.getScreenRect());
+			SDL_RenderFillRect(gRenderer, enemy.getScreenRect());*/
 
-			//drawing the player
+			/*drawing the player
 			SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0xFF, 0xFF);
-			SDL_RenderFillRect(gRenderer, player.getScreenRect());
+			SDL_RenderFillRect(gRenderer, player.getScreenRect());*/
 
 			SDL_RenderPresent(gRenderer);
 
+			frames++;
 			//Displays current FPS of game in the title every second
-			if (cumulativeTime > 1){
+			if (cumulativeTime >= 1){
 				std::string title = "Project Antidle | fps " + std::to_string(frames / cumulativeTime);
 				const char* finalTitle = title.c_str();
 
@@ -131,7 +133,6 @@ int main(int argc, char* argv[]){
 				cumulativeTime--;
 				frames = 0;
 			}
-			frames++;
 		}
 	}
 

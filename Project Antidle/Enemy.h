@@ -10,7 +10,7 @@ public:
 
 	void move(Player &player, float time);
 
-	Enemy(int x, int y, int w, int h, int screenWidth, int screenHeight, Player &player, std::string name = "generic enemy") : Entity(x, y, w, h, screenWidth, screenHeight, name){
+	Enemy(SDL_Renderer* renderer, int x, int y, int w, int h, int screenWidth, int screenHeight, Player &player, std::string texturePath, std::string name = "generic enemy") : Entity(renderer, x, y, w, h, screenWidth, screenHeight, texturePath, name){
 		this->type = ENEMY;
 		update(player);
 		this->x = x;

@@ -64,13 +64,17 @@ Ability* Player::getAbiltiy(std::string &name){
 	return NULL;
 }
 
-void Player::update(float time){
+void Player::update(SDL_Renderer* renderer, float time){
 	keyboard.update();
 
 	if (keyboard.getKeyState(SDL_SCANCODE_W)) moveUp(time);
 	if (keyboard.getKeyState(SDL_SCANCODE_S)) moveDown(time);
 	if (keyboard.getKeyState(SDL_SCANCODE_A)) moveLeft(time);
 	if (keyboard.getKeyState(SDL_SCANCODE_D)) moveRight(time);
+
+	SDL_Point center = { screenWidth / 2, screenHeight / 2 };
+
+	texture->render(screenRect.x, screenRect.y, renderer, &worldRect, 0, &center);
 
 	std::map<std::string, Ability>::iterator it;
 	for (it = abilities.begin(); it != abilities.end(); it++){

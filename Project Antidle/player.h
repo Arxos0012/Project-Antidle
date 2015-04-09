@@ -8,7 +8,7 @@
 
 class Player : public Entity{
 public:
-	Player(int x, int y, int w, int h, int worldWidth, int worldHeight, int screenWidth, int screenHeight, std::string name = "generic player") : Entity(x, y, w, h, screenWidth, screenHeight, name){
+	Player(SDL_Renderer* renderer, int x, int y, int w, int h, int worldWidth, int worldHeight, int screenWidth, int screenHeight, std::string texturePath, std::string name = "generic player") : Entity(renderer, x, y, w, h, screenWidth, screenHeight, texturePath, name){
 		screenRect.x = (screenWidth - w) / 2;
 		screenRect.y = (screenHeight - h) / 2;
 		this->worldWidth = worldWidth;
@@ -19,7 +19,7 @@ public:
 	void setKeyboard(Keyboard &keyboard){ this->keyboard = keyboard;  }
 
 	//different from other update functions, checks for keyboard inputs
-	void update(float time);
+	void update(SDL_Renderer* renderer, float time);
 
 	void setX(int x);
 	void setY(int y);

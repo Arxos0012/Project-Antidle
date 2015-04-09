@@ -18,7 +18,7 @@ public:
 
 	int getScanCode(){ return keyScanCode; }
 
-	Ability(int x, int y, int w, int h, int screenWidth, int screenHeight, int playerX, int playerY, std::string name = "generic ability") : Entity(x, y, w, h, screenWidth, screenHeight, name){
+	Ability(SDL_Renderer* renderer, int x, int y, int w, int h, int screenWidth, int screenHeight, int playerX, int playerY, std::string texturePath, std::string name = "generic ability") : Entity(renderer, x, y, w, h, screenWidth, screenHeight, texturePath, name){
 		this->type = ABILITY;
 		update(playerX, playerY);
 	}

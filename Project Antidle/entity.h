@@ -5,11 +5,13 @@
 #include <string>
 #include <iostream>
 
+#include "texture.h"
+
 #pragma once
 
 class Entity{
 public:
-	Entity(int x, int y, int w, int h, int screenWidth, int screenHeight, std::string name = "generic entity"){
+	Entity(SDL_Renderer* renderer, int x, int y, int w, int h, int screenWidth, int screenHeight, std::string texturePath, std::string name = "generic entity"){
 		worldRect.x = x;
 		worldRect.y = y;
 		worldRect.w = screenRect.w = w;
@@ -17,6 +19,12 @@ public:
 		this->name = name;
 		this->screenWidth = screenWidth;
 		this->screenHeight = screenHeight;
+		texture = new Texture();
+		texture->loadTexture(texturePath, renderer);
+	}
+
+	virtual ~Entity(){
+		delete texture;
 	}
 
 	int getX(){ return worldRect.x; }
@@ -32,6 +40,7 @@ public:
 	int getType(){ return type; }						//return type of entity
 
 protected:
+	Texture* texture;
 	SDL_Rect worldRect, screenRect;
 	std::string name;
 	int type, screenWidth, screenHeight;
