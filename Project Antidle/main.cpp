@@ -46,7 +46,7 @@ int main(int argc, char* argv[]){
 		Ability ability(gRenderer, -100, -100, SCREEN_WIDTH, SCREEN_HEIGHT, player.getX(), player.getY(), "test_ability.png", "Test Ability");
 		ability.setKey(SDL_SCANCODE_E);
 
-		world.addAbility(ability);
+		world.addAbility(&ability);
 
 		SDL_Event e;
 		
@@ -76,10 +76,6 @@ int main(int argc, char* argv[]){
 			cumulativeTime += timePassed;
 			lastTime = currentTime;
 
-			//clearing screen
-			SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
-			SDL_RenderClear(gRenderer);
-
 			//player input
 			player.update(timePassed);
 			
@@ -90,17 +86,21 @@ int main(int argc, char* argv[]){
 			enemy.update(player);
 
 			//correctly managing abilities between the world and the player
-			std::map<std::string, Ability>::iterator at;
+			std::map<std::string, Ability*>::iterator at;
 			for (at = world.getAbilities()->begin(); at != world.getAbilities()->end(); at++){
-				float distance = sqrt(pow(at->second.getX() - player.getX(), 2) + pow(at->second.getY() - player.getY(), 2));
+				float distance = sqrt(pow(at->second->getX() - player.getX(), 2) + pow(at->second->getY() - player.getY(), 2));
 				if (distance <= 20){
 					std::string name = at->first;
 					Ability* transfer = world.getAbility(name);
-					player.addAbility(*transfer);
+					player.addAbility(transfer);
 					world.removeAbility(name);
 					if (world.getAbilities()->size() == 0) break;
 				}
 			}
+
+			//clearing screen
+			SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
+			SDL_RenderClear(gRenderer);
 			
 			//drawing the world
 			SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
@@ -110,9 +110,9 @@ int main(int argc, char* argv[]){
 			enemy.render(gRenderer);	//rendering the enemy
 
 			//rendering the abilites
-			std::map<std::string, Ability>::iterator it;
+			std::map<std::string, Ability*>::iterator it;
 			for (it = world.getAbilities()->begin(); it != world.getAbilities()->end(); it++){
-				it->second.render(gRenderer);
+				it->second->render(gRenderer);
 			}
 
 			SDL_RenderPresent(gRenderer);

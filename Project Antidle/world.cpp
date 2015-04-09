@@ -27,20 +27,21 @@ void World::update(Player& player){
 	mapRect.x = (screenWidth - mapRect.w) / 2 - player.getX();
 	mapRect.y = (screenHeight - mapRect.h) / 2 - player.getY();
 
-	std::map<std::string, Ability>::iterator it;
+	std::map<std::string, Ability*>::iterator it;
 	for (it = abilities.begin(); it != abilities.end(); it++){
-		it->second.update(player.getX(), player.getY());
+		it->second->update(player.getX(), player.getY());
 	}
 }
 
 
-void World::addAbility(Ability &ability){
-	std::map<std::string, Ability>::iterator it = abilities.begin();
-	abilities.insert(it, std::pair<std::string, Ability>(ability.getName(), ability));
+void World::addAbility(Ability* ability){
+	std::cout << "adding " << ability->getName() << "to world\n";
+	std::map<std::string, Ability*>::iterator it = abilities.begin();
+	abilities.insert(it, std::pair<std::string, Ability*>(ability->getName(), ability));
 }
 
 void World::removeAbility(std::string &name){
-	std::map<std::string, Ability>::iterator it;
+	std::map<std::string, Ability*>::iterator it;
 	for (it = abilities.begin(); it != abilities.end(); it++){
 		if (it->first == name){
 			abilities.erase(it);
@@ -50,13 +51,13 @@ void World::removeAbility(std::string &name){
 }
 
 Ability* World::getAbility(std::string &name){
-	std::map<std::string, Ability>::iterator it;
+	std::map<std::string, Ability*>::iterator it;
 	for (it = abilities.begin(); it != abilities.end(); it++){
-		if (it->first == name) return &(it->second);
+		if (it->first == name) return it->second;
 	}
 	return NULL;
 }
 
-std::map<std::string, Ability>* World::getAbilities(){
+std::map<std::string, Ability*>* World::getAbilities(){
 	return &abilities;
 }

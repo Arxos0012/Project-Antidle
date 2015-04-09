@@ -19,18 +19,18 @@ public:
 
 	void update(Player& player);
 
-	void addAbility(Ability &ability);
+	void addAbility(Ability* ability);
 	void removeAbility(std::string &name);
 
 	Ability* getAbility(std::string &name);
 
-	std::map<std::string, Ability>* getAbilities();
+	std::map<std::string, Ability*>* getAbilities();
 
 private:
 	int screenWidth, screenHeight;
 	SDL_Rect mapRect;
 	float buffercoords;
-	std::map<std::string, Ability> abilities;
+	std::map<std::string, Ability*> abilities;
 };
 
 #endif

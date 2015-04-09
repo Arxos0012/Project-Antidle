@@ -20,7 +20,7 @@ public:
 		if (!(texture.loadTexture(texturePath, renderer))) std::cerr << "Failed to load this texture: " << texturePath << "\n.";
 		worldRect.w = screenRect.w = texture.getWidth();
 		worldRect.h = screenRect.h = texture.getHeight();
-		std::cout << worldRect.w << ", " << worldRect.h << "\n";
+		std::cout << name << " is created!!!\n";
 	}
 
 	~Entity(){

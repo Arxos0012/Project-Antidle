@@ -28,17 +28,17 @@ public:
 	
 	int numberOfAbilites(){ return abilities.size(); }
 
-	void addAbility(Ability &ability);
+	void addAbility(Ability* ability);
 	void removeAbiltiy(std::string &name);
 
-	Ability* getAbiltiy(std::string &name);
+	Ability* getAbility(std::string &name);
 
 private:
 	Keyboard keyboard;
 	int worldWidth, worldHeight;
 	float x = 0, y = 0;
 	const int MOVESPEED = 500;	//pixels per second
-	std::map<std::string, Ability> abilities;
+	std::map<std::string, Ability*> abilities;
 
 	void moveLeft(float time);
 	void moveRight(float time);
