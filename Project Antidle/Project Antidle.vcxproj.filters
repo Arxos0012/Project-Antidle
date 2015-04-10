@@ -16,6 +16,18 @@
     <Filter Include="Header Files\Entity">
       <UniqueIdentifier>{c0b2c0d1-2a05-4dd6-a8b2-fa8a8df3f5b7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Entity\Objects">
+      <UniqueIdentifier>{b80ee889-3c45-4e77-834e-f46186a0d68f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Entity\Enemies">
+      <UniqueIdentifier>{34fe2f46-5d58-48e0-99b1-ddfd91686bf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Entity\Objects\Projectiles">
+      <UniqueIdentifier>{8942dc7e-33d9-4472-be13-1dffbbc1be01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Entity\Objects\Static Objects">
+      <UniqueIdentifier>{208035b4-6818-4f28-b8de-5f8172305d76}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -35,9 +47,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="keyboard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="World.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -57,6 +66,12 @@
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
     <ClInclude Include="texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="projectile.h">
+      <Filter>Header Files\Entity\Objects\Projectiles</Filter>
+    </ClInclude>
+    <ClInclude Include="controls.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

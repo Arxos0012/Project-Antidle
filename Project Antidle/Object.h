@@ -6,9 +6,13 @@
 
 class Object : public Entity{
 public:
-	void update(Player &player);
+	virtual void update(Player &player){
+		screenRect.x = (screenWidth / 2 + center.x) - player.getX() - screenRect.w / 2;
+		screenRect.y = (screenHeight / 2 + center.y) - player.getY() - screenRect.h / 2;
+	}
 
-	void render(SDL_Renderer* renderer){
+	virtual void render(SDL_Renderer* renderer){
+		SDL_Point center = { screenRect.x + screenRect.w / 2, screenRect.y + screenRect.h / 2 };
 		texture.render(screenRect.x, screenRect.y, renderer, NULL, 0, &center);
 	}
 
@@ -18,6 +22,7 @@ public:
 	}
 private:
 protected:
+	int objectType;
 	enum ObjectTypes{
 		PROJECTILE, STATIC
 	};

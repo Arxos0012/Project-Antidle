@@ -6,8 +6,8 @@
 class Ability : public Entity{
 public:
 	void update(int playerX, int playerY){
-		screenRect.x = (screenWidth / 2 + worldRect.x) - playerX;
-		screenRect.y = (screenHeight / 2 + worldRect.y) - playerY;
+		screenRect.x = (screenWidth / 2 + center.x) - playerX;
+		screenRect.y = (screenHeight / 2 + center.y) - playerY;
 	}
 
 	void render(SDL_Renderer* renderer){

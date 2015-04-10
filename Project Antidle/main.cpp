@@ -6,19 +6,21 @@
 #include <SDL_image.h>
 #include <SDL_timer.h>
 
-#include "keyboard.h"
+#include "controls.h"
 #include "World.h"
 #include "player.h"
 
 #include "ability.h"
 #include "Enemy.h"
 
+#include "projectile.h"
+
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 
 int mouseX, mouseY;
 
-Keyboard gKeyboard;
+Controls gControls;
 
 bool init();		//initalizes all SDL stuff
 bool loadMedia();	//loads all assets
@@ -49,6 +51,8 @@ int main(int argc, char* argv[]){
 		world.addAbility(&ability);
 
 		SDL_Event e;
+		gControls.setEvent(&e);
+		player.setControls(gControls);
 		
 		Uint32 lastTime = SDL_GetTicks();	//returns time passed since initialization of SDL
 		Uint32 currentTime;
@@ -60,13 +64,6 @@ int main(int argc, char* argv[]){
 			while (SDL_PollEvent(&e) != 0){
 				if (e.type == SDL_QUIT){
 					quit = true;
-				}
-				if (e.type == SDL_MOUSEBUTTONDOWN || SDL_MOUSEBUTTONUP || SDL_MOUSEMOTION){
-					SDL_GetMouseState(&mouseX, &mouseY);
-
-					bool inScreen = true;
-					if (mouseX < 0 || mouseX > SCREEN_WIDTH) inScreen = false;
-					if (mouseY < 0 || mouseY > SCREEN_HEIGHT) inScreen = false;
 				}
 			}
 
@@ -82,8 +79,7 @@ int main(int argc, char* argv[]){
 			//moving things in the world (and the world of course) based on time and player's position
 			world.update(player);
 
-			enemy.move(player, timePassed);
-			enemy.update(player);
+			enemy.update(player, timePassed);
 
 			//correctly managing abilities between the world and the player
 			std::map<std::string, Ability*>::iterator at;

@@ -65,16 +65,16 @@ Ability* Player::getAbility(std::string &name){
 }
 
 void Player::update(float time){
-	keyboard.update();
+	controls.update();
 
-	if (keyboard.getKeyState(SDL_SCANCODE_W)) moveUp(time);
-	if (keyboard.getKeyState(SDL_SCANCODE_S)) moveDown(time);
-	if (keyboard.getKeyState(SDL_SCANCODE_A)) moveLeft(time);
-	if (keyboard.getKeyState(SDL_SCANCODE_D)) moveRight(time);
+	if (controls.getKeyState(SDL_SCANCODE_W)) moveUp(time);
+	if (controls.getKeyState(SDL_SCANCODE_S)) moveDown(time);
+	if (controls.getKeyState(SDL_SCANCODE_A)) moveLeft(time);
+	if (controls.getKeyState(SDL_SCANCODE_D)) moveRight(time);
 
 	std::map<std::string, Ability*>::iterator it;
 	for (it = abilities.begin(); it != abilities.end(); it++){
-		if (keyboard.getKeyState(it->second->getScanCode())) it->second->performAction();
+		if (controls.getLeftMouseButton()) it->second->performAction();
 	}
 }
 

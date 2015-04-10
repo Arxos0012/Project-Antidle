@@ -4,7 +4,7 @@
 #include "entity.h"
 #include <map>
 #include "ability.h"
-#include "keyboard.h"
+#include "controls.h"
 
 class Player : public Entity{
 public:
@@ -16,7 +16,7 @@ public:
 		this->type = PLAYER;
 	}
 
-	void setKeyboard(Keyboard &keyboard){ this->keyboard = keyboard;  }
+	void setControls(Controls &controls){ this->controls = controls; }
 
 	//different from other update functions, checks for keyboard inputs
 	void update(float time);
@@ -34,7 +34,7 @@ public:
 	Ability* getAbility(std::string &name);
 
 private:
-	Keyboard keyboard;
+	Controls controls;
 	int worldWidth, worldHeight;
 	float x = 0, y = 0;
 	const int MOVESPEED = 500;	//pixels per second
