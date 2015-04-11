@@ -12,14 +12,14 @@
 class Entity{
 public:
 	Entity(SDL_Renderer* renderer, int x, int y, int screenWidth, int screenHeight, std::string texturePath, std::string name = "generic entity"){
-		worldRect.x = x;
-		worldRect.y = y;
+		center.x = x;
+		center.y = y;
 		this->name = name;
 		this->screenWidth = screenWidth;
 		this->screenHeight = screenHeight;
 		if (!(texture.loadTexture(texturePath, renderer))) std::cerr << "Failed to load this texture: " << texturePath << "\n.";
-		worldRect.w = screenRect.w = texture.getWidth();
-		worldRect.h = screenRect.h = texture.getHeight();
+		screenRect.w = texture.getWidth();
+		screenRect.h = texture.getHeight();
 		std::cout << name << " is created!!!\n";
 	}
 
@@ -28,13 +28,12 @@ public:
 	}
 
 
-	int getX(){ return worldRect.x; }
-	int getY(){ return worldRect.y; }
+	int getX(){ return center.x; }
+	int getY(){ return center.y; }
 	
 	virtual void setX(){};		//set world x coord and updates screen coords
 	virtual void setY(){};		//set world y coord and updates screen coords
 
-	const SDL_Rect* getWorldRect() { return &worldRect; }
 	const SDL_Rect* getScreenRect() { return &screenRect; }
 
 	std::string getName(){ return name; }				//return name of entity
@@ -42,11 +41,12 @@ public:
 
 protected:
 	Texture texture;
-	SDL_Rect worldRect, screenRect;
+	SDL_Rect screenRect;
+	SDL_Point center;
 	std::string name;
 	int type, screenWidth, screenHeight;
 	enum Types{
-		PLAYER, ENEMY, ABILITY, OBJECT, PROJECTILE
+		PLAYER, ENEMY, ABILITY, OBJECT
 	};
 };
 

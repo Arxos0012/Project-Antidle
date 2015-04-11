@@ -1,43 +1,43 @@
 #include "player.h"
 
 void Player::setX(int x){
-	if (abs(x) > (worldWidth - worldRect.w) / 2){
-		if (worldRect.x > 0) worldRect.x = (worldWidth - worldRect.w) / 2;
-		else worldRect.x = (-worldWidth + worldRect.w) / 2;
+	if (abs(x) > (worldWidth - screenRect.w) / 2){
+		if (center.x > 0) center.x = (worldWidth - screenRect.w) / 2;
+		else center.x = (-worldWidth + screenRect.w) / 2;
 	}
-	else worldRect.x = x;
+	else center.x = x;
 }
 
 void Player::setY(int y){
-	if (abs(y) > (worldHeight - worldRect.h) / 2){
-		if (worldRect.y > 0) worldRect.y = (worldHeight - worldRect.h) / 2;
-		else worldRect.y = (-worldHeight + worldRect.h) / 2;
+	if (abs(y) > (worldHeight - screenRect.h) / 2){
+		if (center.y > 0) center.y = (worldHeight - screenRect.h) / 2;
+		else center.y = (-worldHeight + screenRect.h) / 2;
 	}
-	else worldRect.y = y;
+	else center.y = y;
 }
 
 void Player::moveLeft(float time){
 	x -= MOVESPEED*time;
-	if (x < (-worldWidth + worldRect.w) / 2) x = (-worldWidth + worldRect.w) / 2;
-	worldRect.x = (int)x;
+	if (x < (-worldWidth + screenRect.w) / 2) x = (-worldWidth + screenRect.w) / 2;
+	center.x = (int)x;
 }
 
 void Player::moveRight(float time){
 	x += MOVESPEED*time;
-	if (x >(worldWidth - worldRect.w) / 2) x = (worldWidth - worldRect.w) / 2;
-	worldRect.x = (int)x;
+	if (x >(worldWidth - screenRect.w) / 2) x = (worldWidth - screenRect.w) / 2;
+	center.x = (int)x;
 }
 
 void Player::moveUp(float time){
 	y -= MOVESPEED*time;
-	if (y < (-worldHeight + worldRect.h) / 2) y = (-worldHeight + worldRect.h) / 2;
-	worldRect.y = (int)y;
+	if (y < (-worldHeight + screenRect.h) / 2) y = (-worldHeight + screenRect.h) / 2;
+	center.y = (int)y;
 }
 
 void Player::moveDown(float time){
 	y += MOVESPEED*time;
-	if (y >(worldHeight - worldRect.h) / 2) y = (worldHeight - worldRect.h) / 2;
-	worldRect.y = (int)y;
+	if (y >(worldHeight - screenRect.h) / 2) y = (worldHeight - screenRect.h) / 2;
+	center.y = (int)y;
 }
 
 void Player::addAbility(Ability* ability){
