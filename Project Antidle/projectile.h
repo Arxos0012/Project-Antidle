@@ -19,14 +19,14 @@ public:
 		screenRect.y = ((screenHeight / 2 + center.y) - screenRect.h / 2) - playerY;
 	}
 
-	Projectile(int* playerCoords, float moveSpeed, double direction, SDL_Renderer* renderer, int x, int y, int screenWidth, int screenHeight, std::string texturePath, std::string name = "generic projectile")
+	Projectile(int* playerCoords, int moveSpeed, double direction, SDL_Renderer* renderer, int x, int y, int screenWidth, int screenHeight, std::string texturePath, std::string name = "generic projectile")
 		: Object(renderer,x,y,screenWidth,screenHeight,texturePath,name){
 		this->direction = direction;
 		this->moveSpeed = moveSpeed;
 		update(0, playerCoords[0], playerCoords[1]);
 	}
 private:
-	float moveSpeed;
+	int moveSpeed;
 	const float TO_RADIANS = M_PI / 180;
 };
 

@@ -71,6 +71,9 @@ void Player::update(SDL_Renderer* renderer, float time){
 	if (controls.getKeyState(SDL_SCANCODE_S)) moveDown(time);
 	if (controls.getKeyState(SDL_SCANCODE_A)) moveLeft(time);
 	if (controls.getKeyState(SDL_SCANCODE_D)) moveRight(time);
+
+	
+
 }
 
 void Player::render(SDL_Renderer* renderer){

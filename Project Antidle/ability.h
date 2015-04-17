@@ -34,6 +34,7 @@ public:
 private:
 	bool playerOwned = false;
 	int keyScanCode;
+protected:
 	float TO_DEGREES = 180 / M_PI;
 };
 

@@ -10,10 +10,8 @@
 #include "World.h"
 #include "player.h"
 
-#include "ability.h"
+#include "FireBall.h"
 #include "Enemy.h"
-
-#include "projectile.h"
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
@@ -45,8 +43,8 @@ int main(int argc, char* argv[]){
 		Player player(gRenderer, 0, 0, world.getWidth(), world.getHeight(), SCREEN_WIDTH, SCREEN_HEIGHT, "player.png");
 		Enemy enemy(gRenderer, 100, -100, SCREEN_WIDTH, SCREEN_HEIGHT, player, "enemy.png");
 
-		Ability ability(gRenderer, -100, -100, SCREEN_WIDTH, SCREEN_HEIGHT, player.getX(), player.getY(), "test_ability.png", "Test Ability");
-		ability.setKey(SDL_SCANCODE_E);
+		FireBall fireball(gRenderer, -100, -100, SCREEN_WIDTH, SCREEN_HEIGHT, player.getX(), player.getY());
+		fireball.setKey(SDL_SCANCODE_E);
 
 		world.addAbility(&ability);
 
