@@ -19,7 +19,7 @@ public:
 	void setControls(Controls &controls){ this->controls = controls; }
 
 	//different from other update functions, checks for keyboard inputs
-	void update(float time);
+	void update(SDL_Renderer* renderer, float time);
 	
 	void render(SDL_Renderer* renderer);
 

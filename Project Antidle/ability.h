@@ -1,13 +1,17 @@
 #ifndef ABILITY_H
 #define ABILITY_H
+#define _USE_MATH_DEFINES
 
+#include <cmath>
+#include <map>
+#include <string>
 #include "entity.h"
 
 class Ability : public Entity{
 public:
 	void update(int playerX, int playerY){
-		screenRect.x = (screenWidth / 2 + center.x) - playerX;
-		screenRect.y = (screenHeight / 2 + center.y) - playerY;
+		screenRect.x = ((screenWidth / 2 + center.x) - screenRect.w / 2) - playerX;
+		screenRect.y = ((screenHeight / 2 + center.y) - screenRect.h / 2) - playerY;
 	}
 
 	void render(SDL_Renderer* renderer){
@@ -19,7 +23,7 @@ public:
 
 	void setKey(int scanCode){ keyScanCode = scanCode; }
 
-	void performAction(){ std::cout << "Doin' my thang!!!\n"; }
+	virtual void performAction();
 
 	int getScanCode(){ return keyScanCode; }
 
@@ -30,6 +34,7 @@ public:
 private:
 	bool playerOwned = false;
 	int keyScanCode;
+	float TO_DEGREES = 180 / M_PI;
 };
 
 #endif

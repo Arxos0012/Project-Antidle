@@ -28,6 +28,9 @@
     <Filter Include="Header Files\Entity\Objects\Static Objects">
       <UniqueIdentifier>{208035b4-6818-4f28-b8de-5f8172305d76}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Entity\Abilities">
+      <UniqueIdentifier>{0fa46970-a843-4f7f-a0f7-0fc7b6f391a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -53,26 +56,29 @@
     <ClInclude Include="entity.h">
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="ability.h">
-      <Filter>Header Files\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>Header Files\Entity</Filter>
-    </ClInclude>
     <ClInclude Include="player.h">
-      <Filter>Header Files\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="Object.h">
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
     <ClInclude Include="texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="controls.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="projectile.h">
       <Filter>Header Files\Entity\Objects\Projectiles</Filter>
     </ClInclude>
-    <ClInclude Include="controls.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Object.h">
+      <Filter>Header Files\Entity\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="ability.h">
+      <Filter>Header Files\Entity\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Header Files\Entity\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="FireBall.h">
+      <Filter>Header Files\Entity\Abilities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

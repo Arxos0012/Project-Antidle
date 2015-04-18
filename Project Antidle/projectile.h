@@ -3,43 +3,31 @@
 
 #define _USE_MATH_DEFINES
 
+#include <math.h>
 #include "Object.h"
-#include <cmath>
 
 class Projectile : public Object{
 public:
-	void render(SDL_Renderer* renderer){
-		SDL_Point center = { screenRect.x + screenRect.w / 2, screenRect.y + screenRect.h / 2 };
-		texture.render(screenRect.x, screenRect.y, renderer, NULL, direction, &center);
+	void update(float time, int playerX, int playerY){
+		float xChange = std::cos(direction * TO_RADIANS)*moveSpeed*time;
+		float yChange = std::sin(direction * TO_RADIANS)*moveSpeed*time;
+
+		center.x += xChange;
+		center.y += yChange;
+
+		screenRect.x = ((screenWidth / 2 + center.x) - screenRect.w / 2) - playerX;
+		screenRect.y = ((screenHeight / 2 + center.y) - screenRect.h / 2) - playerY;
 	}
 
-	void update(Player &player, float time){
-		move(time);
-		screenRect.x = (screenWidth / 2 + center.x) - player.getX() - screenRect.w / 2;
-		screenRect.y = (screenHeight / 2 + center.y) - player.getY() - screenRect.h / 2;
-	}
-
-	//NOTE: Direction is measured in degrees
-	Projectile(SDL_Renderer* renderer, int x, int y, float direction, int screenWidth, int screenHeight, Player &player, std::string texturePath, std::string name = "generic object") : Object(renderer, x, y, screenWidth, screenHeight, player, texturePath, name){
-		this->objectType = PROJECTILE;
+	Projectile(int* playerCoords, float moveSpeed, double direction, SDL_Renderer* renderer, int x, int y, int screenWidth, int screenHeight, std::string texturePath, std::string name = "generic projectile")
+		: Object(renderer,x,y,screenWidth,screenHeight,texturePath,name){
 		this->direction = direction;
-		this->x = x;
-		this->y = y;
+		this->moveSpeed = moveSpeed;
+		update(0, playerCoords[0], playerCoords[1]);
 	}
 private:
-	void move(float time){
-		x += time*MOVESPEED*std::cos(direction*DEGREES_TO_RADIANS);
-		y += time*MOVESPEED*std::sin(direction*DEGREES_TO_RADIANS);
-
-		center.x = (int)x;
-		center.y = (int)y;
-	}
-
-	float x, y;
-
-	float DEGREES_TO_RADIANS = (2 * M_PI) / 260.0;
-	int MOVESPEED = 100;
-	float direction;
+	float moveSpeed;
+	const float TO_RADIANS = M_PI / 180;
 };
 
 #endif

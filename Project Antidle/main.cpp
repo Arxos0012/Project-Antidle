@@ -74,7 +74,7 @@ int main(int argc, char* argv[]){
 			lastTime = currentTime;
 
 			//player input
-			player.update(timePassed);
+			player.update(gRenderer, timePassed);
 			
 			//moving things in the world (and the world of course) based on time and player's position
 			world.update(player);

@@ -64,18 +64,13 @@ Ability* Player::getAbility(std::string &name){
 	return NULL;
 }
 
-void Player::update(float time){
+void Player::update(SDL_Renderer* renderer, float time){
 	controls.update();
 
 	if (controls.getKeyState(SDL_SCANCODE_W)) moveUp(time);
 	if (controls.getKeyState(SDL_SCANCODE_S)) moveDown(time);
 	if (controls.getKeyState(SDL_SCANCODE_A)) moveLeft(time);
 	if (controls.getKeyState(SDL_SCANCODE_D)) moveRight(time);
-
-	std::map<std::string, Ability*>::iterator it;
-	for (it = abilities.begin(); it != abilities.end(); it++){
-		if (controls.getLeftMouseButton()) it->second->performAction();
-	}
 }
 
 void Player::render(SDL_Renderer* renderer){
