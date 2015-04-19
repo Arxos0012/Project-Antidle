@@ -8,7 +8,7 @@
 class FireBall : public Ability{
 public:
 	FireBall(SDL_Renderer* renderer, int x, int y, int screenWidth, int screenHeight, int playerX, int playerY)
-		: Ability(renderer,x,y,screenWidth,screenHeight,playerX,playerY,"fireball_ability","Fireball Ability"){}
+		: Ability(renderer,x,y,screenWidth,screenHeight,playerX,playerY,"test_ability.png","Fireball Ability"){}
 
 	void performAction(SDL_Renderer* renderer, int playerX, int playerY, int mouseX, int mouseY){
 
@@ -22,26 +22,37 @@ public:
 		std::string name = "fireball " + std::to_string(projectiles.size());
 		std::string filePath = "fireball.png";
 
-		std::map<std::string, Projectile>::iterator it = projectiles.begin();
-		projectiles.insert(it, std::pair<std::string, Projectile>(name, Projectile(playerCoords, 100, direction, renderer, playerX, playerY, screenWidth, screenHeight, filePath, name)));
+		Projectile newProjectile(playerCoords, 100, direction, renderer, playerX, playerY, screenWidth, screenHeight, filePath, name);
+
+		std::map<std::string, Projectile*>::iterator it = projectiles.begin();
+		projectiles.insert(it, std::pair<std::string, Projectile*>(name, &newProjectile));
 	}
 
 	void updateProjectiles(float time, int playerX, int playerY){
-		std::map<std::string, Projectile>::iterator it;
+		std::map<std::string, Projectile*>::iterator it;
 		for (it = projectiles.begin(); it != projectiles.end(); it++){
-			it->second.update(time, playerX, playerY);
+			it->second->update(time, playerX, playerY);
 		}
 	}
 
 	void renderProjectiles(SDL_Renderer* renderer){
-		std::map<std::string, Projectile>::iterator it;
+		std::map<std::string, Projectile*>::iterator it;
 		for (it = projectiles.begin(); it != projectiles.end(); it++){
-			it->second.render(renderer);
+			it->second->render(renderer);
 		}
 	}
 
+	void update(float time, int playerX, int playerY){
+		updateProjectiles(time, playerX, playerY);
+	}
+
+	void render(SDL_Renderer* renderer, int someKey){
+		renderProjectiles(renderer);
+	}
+
+
 private:
-	std::map<std::string, Projectile> projectiles;
+	std::map<std::string, Projectile*> projectiles;
 };
 
 #endif

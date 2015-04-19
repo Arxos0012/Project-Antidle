@@ -72,11 +72,23 @@ void Player::update(SDL_Renderer* renderer, float time){
 	if (controls.getKeyState(SDL_SCANCODE_A)) moveLeft(time);
 	if (controls.getKeyState(SDL_SCANCODE_D)) moveRight(time);
 
-	
+	std::map<std::string, Ability*>::iterator it;
+	for (it = abilities.begin(); it != abilities.end(); it++){
+		if (controls.getLeftMouseButton() && it->second->getName() == "Fireball Ability")
+			it->second->performAction(renderer, center.x, center.y, controls.getMouseX(), controls.getMouseY());
+	}
+	for (it = abilities.begin(); it != abilities.end(); it++){
+		if (it->second->getName() == "Fireball Ability") it->second->update(time, center.x, center.y);
+	}
 
 }
 
 void Player::render(SDL_Renderer* renderer){
 	SDL_Point center = { screenWidth / 2, screenHeight / 2 };
 	texture.render(screenRect.x, screenRect.y, renderer, NULL, 0, &center);
+
+	std::map<std::string, Ability*>::iterator it;
+	for (it = abilities.begin(); it != abilities.end(); it++){
+		if (it->second->getName() == "Fireball Ability") it->second->render(renderer, 0);
+	}
 }

@@ -14,6 +14,9 @@ public:
 		screenRect.y = ((screenHeight / 2 + center.y) - screenRect.h / 2) - playerY;
 	}
 
+	virtual void update(float time, int playerX, int playerY){}
+	virtual void render(SDL_Renderer* renderer, int someKey){}
+
 	void render(SDL_Renderer* renderer){
 		SDL_Point center = { screenRect.x + screenRect.w / 2, screenRect.y + screenRect.h / 2 };
 		texture.render(screenRect.x, screenRect.y, renderer, NULL, 0, &center);
@@ -23,7 +26,8 @@ public:
 
 	void setKey(int scanCode){ keyScanCode = scanCode; }
 
-	virtual void performAction();
+	virtual void performAction(){}
+	virtual void performAction(SDL_Renderer* renderer, int playerX, int playerY, int mouseX, int mouseY){}
 
 	int getScanCode(){ return keyScanCode; }
 

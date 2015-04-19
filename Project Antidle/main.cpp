@@ -46,7 +46,7 @@ int main(int argc, char* argv[]){
 		FireBall fireball(gRenderer, -100, -100, SCREEN_WIDTH, SCREEN_HEIGHT, player.getX(), player.getY());
 		fireball.setKey(SDL_SCANCODE_E);
 
-		world.addAbility(&ability);
+		world.addAbility(&fireball);
 
 		SDL_Event e;
 		gControls.setEvent(&e);
