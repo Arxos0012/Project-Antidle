@@ -9,8 +9,8 @@ public:
 		: Entity(renderer, x, y, screenWidth, screenHeight, texturePath, name){}
 
 	void render(SDL_Renderer* renderer){
-		SDL_Point center = { screenRect.x + screenRect.w / 2, screenRect.y + screenRect.h / 2 };
-		texture.render(screenRect.x, screenRect.y, renderer, NULL, direction, &center);
+		SDL_Point point = { screenRect.x + (screenWidth/2), screenRect.y + (screenHeight/2)};
+		texture.render(screenRect.x, screenRect.y, renderer, NULL, direction);
 	}
 
 protected:

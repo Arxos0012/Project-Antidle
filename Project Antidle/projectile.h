@@ -12,21 +12,31 @@ public:
 		float xChange = std::cos(direction * TO_RADIANS)*moveSpeed*time;
 		float yChange = std::sin(direction * TO_RADIANS)*moveSpeed*time;
 
-		center.x += xChange;
-		center.y += yChange;
+		x += xChange;
+		y += yChange;
 
-		screenRect.x = ((screenWidth / 2 + center.x) - screenRect.w / 2) - playerX;
-		screenRect.y = ((screenHeight / 2 + center.y) - screenRect.h / 2) - playerY;
+		center.x = (int)x;
+		center.y = (int)y;
+
+		screenRect.x = (screenWidth / 2 + center.x) - playerX;
+		screenRect.y = (screenHeight / 2 + center.y) - playerY;
 	}
 
 	Projectile(int* playerCoords, int moveSpeed, double direction, SDL_Renderer* renderer, int x, int y, int screenWidth, int screenHeight, std::string texturePath, std::string name = "generic projectile")
 		: Object(renderer,x,y,screenWidth,screenHeight,texturePath,name){
 		this->direction = direction;
 		this->moveSpeed = moveSpeed;
+		this->x = x;
+		this->y = y;
 		update(0, playerCoords[0], playerCoords[1]);
 	}
+
+	int getScreenX(){ return screenRect.x; }
+	int getScreenY(){ return screenRect.y; }
+
 private:
 	int moveSpeed;
+	float x, y;
 	const float TO_RADIANS = M_PI / 180;
 };
 

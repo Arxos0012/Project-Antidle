@@ -13,8 +13,8 @@
 #include "FireBall.h"
 #include "Enemy.h"
 
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 600;
+const int SCREEN_WIDTH = 1280;
+const int SCREEN_HEIGHT = 720;
 
 int mouseX, mouseY;
 
@@ -23,8 +23,6 @@ Controls gControls;
 bool init();		//initalizes all SDL stuff
 bool loadMedia();	//loads all assets
 void close();		//frees up all memory at the end
-
-void addAbilitiesToWorld(World &world, Player &player);
 
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;

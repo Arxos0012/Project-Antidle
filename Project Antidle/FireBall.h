@@ -12,32 +12,57 @@ public:
 
 	void performAction(SDL_Renderer* renderer, int playerX, int playerY, int mouseX, int mouseY){
 
-		float xChange = mouseX - playerX;
-		float yChange = mouseY - playerY;
-		
-		double direction = std::atan(yChange / xChange) * TO_DEGREES;
+		mouseX -= screenWidth / 2;
+		mouseY -= screenHeight / 2;
 
-		int playerCoords[] = { playerX, playerY };
+		if (freeProjectiles.size() == 0){
+			double direction = std::atan2(mouseY, mouseX) * TO_DEGREES;
 
-		std::string name = "fireball " + std::to_string(projectiles.size());
-		std::string filePath = "fireball.png";
+			int playerCoords[] = { playerX, playerY };
 
-		Projectile newProjectile(playerCoords, 100, direction, renderer, playerX, playerY, screenWidth, screenHeight, filePath, name);
+			std::string name = "fireball " + std::to_string(usedProjectiles.size());
+			std::string filePath = "fireball.png";
 
-		std::map<std::string, Projectile*>::iterator it = projectiles.begin();
-		projectiles.insert(it, std::pair<std::string, Projectile*>(name, &newProjectile));
+			Projectile* newProjectile = new Projectile(playerCoords, 300, direction, renderer, playerX, playerY, screenWidth, screenHeight, filePath, name);
+
+			std::map<std::string, Projectile*>::iterator it = usedProjectiles.begin();
+			usedProjectiles.insert(it, std::pair<std::string, Projectile*>(name, newProjectile));
+		}
+		else{
+			std::map<std::string, Projectile*>::iterator ft = freeProjectiles.begin();
+			std::map<std::string, Projectile*>::iterator it = usedProjectiles.begin();
+
+			usedProjectiles.insert(it, std::pair<std::string, Projectile*>(ft->first, ft->second));
+			freeProjectiles.erase(ft);
+		}
 	}
 
-	void updateProjectiles(float time, int playerX, int playerY){
+	void updateProjectiles(float time, int playerX, int playerY) {
 		std::map<std::string, Projectile*>::iterator it;
-		for (it = projectiles.begin(); it != projectiles.end(); it++){
+		for (it = usedProjectiles.begin(); it != usedProjectiles.end(); it++){
 			it->second->update(time, playerX, playerY);
 		}
+		it = usedProjectiles.begin();
+		std::map<std::string, Projectile*>::iterator ft;
+		while (it != usedProjectiles.end()){
+			if (abs(it->second->getScreenX()) > screenWidth / 2 || abs(it->second->getScreenY()) > screenHeight / 2){
+				it->second->setX(playerX);
+				it->second->setY(playerY);
+
+				ft = freeProjectiles.begin();
+				freeProjectiles.insert(ft, std::pair<std::string, Projectile*>(it->first, it->second));
+				usedProjectiles.erase(it);
+				it = usedProjectiles.begin();
+				continue;
+			}
+			it++;
+		}
+
 	}
 
 	void renderProjectiles(SDL_Renderer* renderer){
 		std::map<std::string, Projectile*>::iterator it;
-		for (it = projectiles.begin(); it != projectiles.end(); it++){
+		for (it = usedProjectiles.begin(); it != usedProjectiles.end(); it++){
 			it->second->render(renderer);
 		}
 	}
@@ -50,9 +75,20 @@ public:
 		renderProjectiles(renderer);
 	}
 
+	~FireBall(){
+		std::map<std::string, Projectile*>::iterator it;
+		for (it = usedProjectiles.begin(); it != usedProjectiles.end(); it++){
+			delete it->second;
+		}
+		for (it = freeProjectiles.begin(); it != freeProjectiles.end(); it++){
+			delete it->second;
+		}
+	}
+
 
 private:
-	std::map<std::string, Projectile*> projectiles;
+	std::map<std::string, Projectile*> usedProjectiles;
+	std::map<std::string, Projectile*> freeProjectiles;
 };
 
 #endif

@@ -20,7 +20,6 @@ public:
 		if (!(texture.loadTexture(texturePath, renderer))) std::cerr << "Failed to load this texture: " << texturePath << "\n.";
 		screenRect.w = texture.getWidth();
 		screenRect.h = texture.getHeight();
-		std::cout << name << " is created!!!\n";
 	}
 
 	~Entity(){
@@ -31,8 +30,8 @@ public:
 	int getX(){ return center.x; }
 	int getY(){ return center.y; }
 	
-	virtual void setX(){};		//set world x coord and updates screen coords
-	virtual void setY(){};		//set world y coord and updates screen coords
+	virtual void setX(int x){ center.x = x; }		//set world x coord and updates screen coords
+	virtual void setY(int y){ center.y = y; }		//set world y coord and updates screen coords
 
 	const SDL_Rect* getScreenRect() { return &screenRect; }
 
