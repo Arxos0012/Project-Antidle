@@ -3,8 +3,10 @@
 
 #include "entity.h"
 #include <map>
+#include <vector>
 #include "ability.h"
 #include "controls.h"
+#include "static.h"
 
 class Player : public Entity{
 public:
@@ -19,7 +21,7 @@ public:
 	void setControls(Controls &controls){ this->controls = controls; }
 
 	//different from other update functions, checks for keyboard inputs
-	void update(SDL_Renderer* renderer, float time);
+	void update(SDL_Renderer* renderer, float time, std::vector<Static*>& stats);
 	
 	void render(SDL_Renderer* renderer);
 
@@ -38,12 +40,16 @@ private:
 	int worldWidth, worldHeight;
 	float x = 0, y = 0;
 	const int MOVESPEED = 500;	//pixels per second
-	std::map<std::string, Ability*> abilities;
+	const int ICON_SPACING = 10;	//pixles
+	std::map<std::string, Ability*> abilities;	
+	Ability* primeAbilities[2];
 
 	void moveLeft(float time);
 	void moveRight(float time);
 	void moveUp(float time);
 	void moveDown(float time);
+
+	void untouch(Static* stat, float time);
 };
 
 #endif

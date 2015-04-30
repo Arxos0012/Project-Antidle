@@ -80,5 +80,8 @@
     <ClInclude Include="FireBall.h">
       <Filter>Header Files\Entity\Abilities</Filter>
     </ClInclude>
+    <ClInclude Include="static.h">
+      <Filter>Header Files\Entity\Objects\Static Objects</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

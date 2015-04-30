@@ -7,62 +7,52 @@
 
 class FireBall : public Ability{
 public:
-	FireBall(SDL_Renderer* renderer, int x, int y, int screenWidth, int screenHeight, int playerX, int playerY)
-		: Ability(renderer,x,y,screenWidth,screenHeight,playerX,playerY,"test_ability.png","Fireball Ability"){}
+	FireBall(SDL_Renderer* renderer, int x, int y, int screenWidth, int screenHeight, int playerX, int playerY, std::string iconPath)
+		: Ability(renderer,x,y,screenWidth,screenHeight,playerX,playerY, iconPath, "Fireball Ability"){}
+
+	bool notInScreen(Projectile* projectile){
+		bool notInXBounds = (projectile->getScreenX() < 0 || projectile->getScreenX() > screenWidth);
+		bool notInYBounds = (projectile->getScreenY() < 0 || projectile->getScreenY() > screenHeight);
+		return notInXBounds || notInYBounds;
+	}
 
 	void performAction(SDL_Renderer* renderer, int playerX, int playerY, int mouseX, int mouseY){
 
 		mouseX -= screenWidth / 2;
 		mouseY -= screenHeight / 2;
 
-		if (freeProjectiles.size() == 0){
-			double direction = std::atan2(mouseY, mouseX) * TO_DEGREES;
+		double direction = std::atan2(mouseY, mouseX) * TO_DEGREES;
 
-			int playerCoords[] = { playerX, playerY };
+		int playerCoords[] = { playerX, playerY };
 
-			std::string name = "fireball " + std::to_string(usedProjectiles.size());
-			std::string filePath = "fireball.png";
+		std::string name = "fireball " + std::to_string(projectiles.size());
+		std::string filePath = "fireball.png";
 
-			Projectile* newProjectile = new Projectile(playerCoords, 300, direction, renderer, playerX, playerY, screenWidth, screenHeight, filePath, name);
+		Projectile* newProjectile = new Projectile(playerCoords, 300, direction, renderer, playerX, playerY, screenWidth, screenHeight, filePath, name);
 
-			std::map<std::string, Projectile*>::iterator it = usedProjectiles.begin();
-			usedProjectiles.insert(it, std::pair<std::string, Projectile*>(name, newProjectile));
-		}
-		else{
-			std::map<std::string, Projectile*>::iterator ft = freeProjectiles.begin();
-			std::map<std::string, Projectile*>::iterator it = usedProjectiles.begin();
-
-			usedProjectiles.insert(it, std::pair<std::string, Projectile*>(ft->first, ft->second));
-			freeProjectiles.erase(ft);
-		}
+		std::map<std::string, Projectile*>::iterator it = projectiles.begin();
+		projectiles.insert(it, std::pair<std::string, Projectile*>(name, newProjectile));
 	}
 
 	void updateProjectiles(float time, int playerX, int playerY) {
 		std::map<std::string, Projectile*>::iterator it;
-		for (it = usedProjectiles.begin(); it != usedProjectiles.end(); it++){
+		for (it = projectiles.begin(); it != projectiles.end(); it++){
 			it->second->update(time, playerX, playerY);
 		}
-		it = usedProjectiles.begin();
-		std::map<std::string, Projectile*>::iterator ft;
-		while (it != usedProjectiles.end()){
-			if (abs(it->second->getScreenX()) > screenWidth / 2 || abs(it->second->getScreenY()) > screenHeight / 2){
-				it->second->setX(playerX);
-				it->second->setY(playerY);
-
-				ft = freeProjectiles.begin();
-				freeProjectiles.insert(ft, std::pair<std::string, Projectile*>(it->first, it->second));
-				usedProjectiles.erase(it);
-				it = usedProjectiles.begin();
+		it = projectiles.begin();
+		while (it != projectiles.end()){
+			if (notInScreen(it->second)){
+				projectiles.erase(it);
+				it = projectiles.begin();
 				continue;
 			}
 			it++;
 		}
-
 	}
 
 	void renderProjectiles(SDL_Renderer* renderer){
 		std::map<std::string, Projectile*>::iterator it;
-		for (it = usedProjectiles.begin(); it != usedProjectiles.end(); it++){
+		for (it = projectiles.begin(); it != projectiles.end(); it++){
 			it->second->render(renderer);
 		}
 	}
@@ -77,18 +67,14 @@ public:
 
 	~FireBall(){
 		std::map<std::string, Projectile*>::iterator it;
-		for (it = usedProjectiles.begin(); it != usedProjectiles.end(); it++){
-			delete it->second;
-		}
-		for (it = freeProjectiles.begin(); it != freeProjectiles.end(); it++){
+		for (it = projectiles.begin(); it != projectiles.end(); it++){
 			delete it->second;
 		}
 	}
 
 
 private:
-	std::map<std::string, Projectile*> usedProjectiles;
-	std::map<std::string, Projectile*> freeProjectiles;
+	std::map<std::string, Projectile*> projectiles;
 };
 
 #endif

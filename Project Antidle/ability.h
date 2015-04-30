@@ -22,6 +22,10 @@ public:
 		texture.render(screenRect.x, screenRect.y, renderer, NULL, 0, &center);
 	}
 
+	void renderIcon(SDL_Renderer* renderer, int x, int y){
+		icon.render(x, y, renderer);
+	}
+
 	void markAsPlayerOwned(){ playerOwned = true; }
 
 	void setKey(int scanCode){ keyScanCode = scanCode; }
@@ -31,14 +35,20 @@ public:
 
 	int getScanCode(){ return keyScanCode; }
 
-	Ability(SDL_Renderer* renderer, int x, int y, int screenWidth, int screenHeight, int playerX, int playerY, std::string texturePath, std::string name = "generic ability") : Entity(renderer, x, y, screenWidth, screenHeight, texturePath, name){
+	Ability(SDL_Renderer* renderer, int x, int y, int screenWidth, int screenHeight, int playerX, int playerY, std::string iconPath, std::string name = "generic ability") : Entity(renderer, x, y, screenWidth, screenHeight, "ability_token.png", name){
 		this->type = ABILITY;
+		icon.loadTexture(iconPath, renderer);
 		update(playerX, playerY);
 	}
+
+	int getIconWidth(){ return icon.getWidth(); }
+	int getIconHeight(){ return icon.getHeight(); }
+
 private:
 	bool playerOwned = false;
 	int keyScanCode;
 protected:
+	Texture icon;
 	float TO_DEGREES = 180 / M_PI;
 };
 

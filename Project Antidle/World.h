@@ -5,6 +5,8 @@
 #include <array>
 #include <iostream>
 #include <map>
+#include <vector>
+#include "static.h"
 
 class Player;
 class Ability;
@@ -17,7 +19,10 @@ public:
 
 	SDL_Rect* getMapRect();
 
+	void render(SDL_Renderer* renderer);
 	void update(Player& player);
+
+	void addStatic(Static* stat);
 
 	void addAbility(Ability* ability);
 	void removeAbility(std::string &name);
@@ -26,11 +31,16 @@ public:
 
 	std::map<std::string, Ability*>* getAbilities();
 
+	std::vector<Static*> getOnScreenStatics();
+
 private:
 	int screenWidth, screenHeight;
 	SDL_Rect mapRect;
 	float buffercoords;
 	std::map<std::string, Ability*> abilities;
+	std::map<std::string, Static*> statics;
+
+	bool onScreen(Static* stat);
 };
 
 #endif

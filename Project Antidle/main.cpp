@@ -12,11 +12,10 @@
 
 #include "FireBall.h"
 #include "Enemy.h"
+#include "static.h"
 
-const int SCREEN_WIDTH = 1280;
-const int SCREEN_HEIGHT = 720;
-
-int mouseX, mouseY;
+const int SCREEN_WIDTH = 800;
+const int SCREEN_HEIGHT = 600;
 
 Controls gControls;
 
@@ -41,10 +40,13 @@ int main(int argc, char* argv[]){
 		Player player(gRenderer, 0, 0, world.getWidth(), world.getHeight(), SCREEN_WIDTH, SCREEN_HEIGHT, "player.png");
 		Enemy enemy(gRenderer, 100, -100, SCREEN_WIDTH, SCREEN_HEIGHT, player, "enemy.png");
 
-		FireBall fireball(gRenderer, -100, -100, SCREEN_WIDTH, SCREEN_HEIGHT, player.getX(), player.getY());
-		fireball.setKey(SDL_SCANCODE_E);
+		FireBall fireball(gRenderer, -100, -100, SCREEN_WIDTH, SCREEN_HEIGHT, player.getX(), player.getY(), "test_icon.png");
+
+		Static brick(gRenderer, 200, 200, player.getX(), player.getY(), SCREEN_WIDTH, SCREEN_HEIGHT, "brick.png");
 
 		world.addAbility(&fireball);
+
+		world.addStatic(&brick);
 
 		SDL_Event e;
 		gControls.setEvent(&e);
@@ -70,7 +72,7 @@ int main(int argc, char* argv[]){
 			lastTime = currentTime;
 
 			//player input
-			player.update(gRenderer, timePassed);
+			player.update(gRenderer, timePassed, world.getOnScreenStatics());
 			
 			//moving things in the world (and the world of course) based on time and player's position
 			world.update(player);
@@ -102,10 +104,7 @@ int main(int argc, char* argv[]){
 			enemy.render(gRenderer);	//rendering the enemy
 
 			//rendering the abilites
-			std::map<std::string, Ability*>::iterator it;
-			for (it = world.getAbilities()->begin(); it != world.getAbilities()->end(); it++){
-				it->second->render(gRenderer);
-			}
+			world.render(gRenderer);
 
 			SDL_RenderPresent(gRenderer);
 

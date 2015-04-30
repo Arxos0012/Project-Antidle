@@ -29,6 +29,9 @@ public:
 
 	int getX(){ return center.x; }
 	int getY(){ return center.y; }
+
+	int getWidth(){ return screenRect.w; }
+	int getHeight(){ return screenRect.h; }
 	
 	virtual void setX(int x){ center.x = x; }		//set world x coord and updates screen coords
 	virtual void setY(int y){ center.y = y; }		//set world y coord and updates screen coords
