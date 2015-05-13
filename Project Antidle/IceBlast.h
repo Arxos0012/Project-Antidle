@@ -18,7 +18,7 @@ public:
 		int playerCoords[] = { playerX, playerY };
 		Projectile* newSpread[8];
 		for (int i = 0; i < 8; i++){
-			newSpread[i] = new Projectile(playerCoords, 300, (i/8.0)*2*M_PI*TO_DEGREES, renderer, playerX, playerY, screenWidth, screenHeight, "ice shard.png", "ice shard");
+			newSpread[i] = new Projectile(playerCoords, 300, (i / 8.0) * 2 * M_PI*TO_DEGREES, renderer, playerX, playerY, screenWidth, screenHeight, "ice shard.png", "ice shard" + std::to_string(waveCount) + std::to_string(i));
 		}
 
 		std::map<std::string, Projectile*>::iterator it;
@@ -27,7 +27,7 @@ public:
 			projectiles.insert(it, std::pair<std::string, Projectile*>(newSpread[j]->getName(), newSpread[j]));
 		}
 		
-
+		waveCount++;
 	}
 
 	void updateProjectiles(float time, int playerX, int playerY) {
@@ -67,6 +67,8 @@ public:
 			delete it->second;
 		}
 	}
+private:
+	int waveCount = 0;
 };
 
 #endif

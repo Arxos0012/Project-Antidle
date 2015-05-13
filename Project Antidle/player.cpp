@@ -82,12 +82,11 @@ void Player::update(SDL_Renderer* renderer, float time, std::vector<Static*>& st
 		untouch(*st, time);
 	}
 
-	if (controls.getLeftMouseButton()){
-		int info = {};
+	int info[] = { center.x, center.y, controls.getMouseX(), controls.getMouseY() };
+	if (controls.getLeftMouseButton() && primeAbilities[0] != NULL){
 		triggerAbility(primeAbilities[0], renderer, info);
 	}
-	if (controls.getRightMouseButton()){
-		int info = {};
+	if (controls.getRightMouseButton() && primeAbilities[1] != NULL){
 		triggerAbility(primeAbilities[1], renderer, info);
 	}
 
@@ -133,8 +132,12 @@ void Player::untouch(Static* stat, float time){
 }
 
 void Player::triggerAbility(Ability* ability, SDL_Renderer* renderer, int* info){
-	if (ability->getName() == "FireBall Ability") ability->performAction(renderer, info[0], info[1], info[2], info[3]);
-	if (ability->getName() == "IceBlast Ability") ability->performAction(renderer, info[0], info[1]);
+	if (ability->getName() == "Fireball Ability"){
+		ability->performAction(renderer, info[0], info[1], info[2], info[3]);
+	}
+	if (ability->getName() == "IceBlast Ability"){
+		ability->performAction(renderer, info[0], info[1]);
+	}
 }
 
 std::map<std::string, Projectile*> Player::getFiredProjectiles(){
@@ -163,6 +166,7 @@ void Player::render(SDL_Renderer* renderer){
 	std::map<std::string, Ability*>::iterator it;
 	for (it = abilities.begin(); it != abilities.end(); it++){
 		if (it->second->getName() == "Fireball Ability") it->second->render(renderer, 0);
+		if (it->second->getName() == "IceBlast Ability") it->second->render(renderer, 0);
 	}
 
 	//rendering icons for the prime abilities

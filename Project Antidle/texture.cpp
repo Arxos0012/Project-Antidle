@@ -8,7 +8,6 @@ Texture::Texture(){
 
 Texture::~Texture(){
 	free();
-	std::cout << path << "'s dead!!!\n";
 }
 
 void Texture::free(){
@@ -51,7 +50,7 @@ bool Texture::loadTexture(std::string path, SDL_Renderer* renderer){
 		printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
 	}
 	else{
-		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0xFF, 0, 0xFF));
+		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0x79, 0x77, 0x77));
 		newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
 		if (newTexture == NULL){
 			printf("Unable to create texture from surface %s! SDL Error %s\n", path.c_str(), SDL_GetError());

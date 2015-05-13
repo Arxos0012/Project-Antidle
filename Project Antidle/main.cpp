@@ -45,21 +45,50 @@ int main(int argc, char* argv[]){
 		std::map <std::string, Enemy*> enemies;
 		std::map <std::string, Enemy*>::iterator et = enemies.begin();
 
-		World world(550, 550, SCREEN_WIDTH, SCREEN_HEIGHT);
+		World world(3000, 3000, SCREEN_WIDTH, SCREEN_HEIGHT);
 		Player player(gRenderer, 0, 0, world.getWidth(), world.getHeight(), SCREEN_WIDTH, SCREEN_HEIGHT, "player.png");
-		Enemy enemy(gRenderer, 100, -100, SCREEN_WIDTH, SCREEN_HEIGHT, player, "enemy.png");
 
-		FireBall fireball(gRenderer, -100, -100, SCREEN_WIDTH, SCREEN_HEIGHT, player.getX(), player.getY(), "test_icon.png");
-		IceBlast iceblast(gRenderer, -100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, player.getX(), player.getY(), "test_icon.png");
+		Enemy enemy1(gRenderer, -1100, -1400, SCREEN_WIDTH, SCREEN_HEIGHT, player, "enemy.png", "enemy1");
+		Enemy enemy2(gRenderer, -1100, -1200, SCREEN_WIDTH, SCREEN_HEIGHT, player, "enemy.png", "enemy2");
+		Enemy enemy3(gRenderer, 1100, 1400, SCREEN_WIDTH, SCREEN_HEIGHT, player, "enemy.png", "enemy3");
+		Enemy enemy4(gRenderer, 1100, 1200, SCREEN_WIDTH, SCREEN_HEIGHT, player, "enemy.png", "enemy4");
+		Enemy enemy5(gRenderer, -1400, 1400, SCREEN_WIDTH, SCREEN_HEIGHT, player, "enemy.png", "enemy5");
+		Enemy enemy6(gRenderer, 1400, -1400, SCREEN_WIDTH, SCREEN_HEIGHT, player, "enemy.png", "enemy6");
 
-		Static brick(gRenderer, 200, 200, player.getX(), player.getY(), SCREEN_WIDTH, SCREEN_HEIGHT, "brick.png");
+		enemies.insert(et, std::pair<std::string, Enemy*>(enemy1.getName(), &enemy1));
+		enemies.insert(et, std::pair<std::string, Enemy*>(enemy2.getName(), &enemy2));
+		enemies.insert(et, std::pair<std::string, Enemy*>(enemy3.getName(), &enemy3));
+		enemies.insert(et, std::pair<std::string, Enemy*>(enemy4.getName(), &enemy4));
+		enemies.insert(et, std::pair<std::string, Enemy*>(enemy5.getName(), &enemy5));
+		enemies.insert(et, std::pair<std::string, Enemy*>(enemy6.getName(), &enemy6));
 
-		enemies.insert(et, std::pair<std::string, Enemy*>(enemy.getName(), &enemy));
+		FireBall fireball(gRenderer, -1400, -1400, SCREEN_WIDTH, SCREEN_HEIGHT, player.getX(), player.getY(), "fireball icon.png");
+		IceBlast iceblast(gRenderer, 1400, 1400, SCREEN_WIDTH, SCREEN_HEIGHT, player.getX(), player.getY(), "iceblast icon.png");
+
+		Static *northWall[23], *southWall[23], *eastWall[22], *westWall[22];
+
+		for (int i = 0; i < 23; i++){
+			northWall[i] = new Static(gRenderer, -1250 + (100 * i), -1250, player.getX(), player.getY(), SCREEN_WIDTH, SCREEN_HEIGHT, "brick.png", "northwall" + std::to_string(i));
+			world.addStatic(northWall[i]);
+		}
+
+		for (int i = 0; i < 23; i++){
+			southWall[i] = new Static(gRenderer, 1250 - (100 * i), 1250, player.getX(), player.getY(), SCREEN_WIDTH, SCREEN_HEIGHT, "brick.png", "southwall" + std::to_string(i));
+			world.addStatic(southWall[i]);
+		}
+
+		for (int i = 0; i < 22; i++){
+			westWall[i] = new Static(gRenderer, -1250, -1150 + (100 * i), player.getX(), player.getY(), SCREEN_WIDTH, SCREEN_HEIGHT, "brick.png", "westwall" + std::to_string(i));
+			world.addStatic(westWall[i]);
+		}
+
+		for (int i = 0; i < 22; i++){
+			eastWall[i] = new Static(gRenderer, 1250, 1150 - (100 * i), player.getX(), player.getY(), SCREEN_WIDTH, SCREEN_HEIGHT, "brick.png", "eastwall" + std::to_string(i));
+			world.addStatic(eastWall[i]);
+		}
 
 		world.addAbility(&fireball);
 		world.addAbility(&iceblast);
-
-		world.addStatic(&brick);
 
 		Texture gameOverTexture, victoryTexture, freezeFrame;
 		gameOverTexture.loadTexture("gameover.png", gRenderer);
@@ -106,7 +135,7 @@ int main(int argc, char* argv[]){
 					et->second->update(player, timePassed);
 					pt = playerProjectiles.begin();
 					while (pt != playerProjectiles.end()){
-						if (getDistance(et->second->getX(), et->second->getY(), pt->second->getX(), pt->second->getY()) <= 20){
+						if (getDistance(et->second->getX(), et->second->getY(), pt->second->getX(), pt->second->getY()) <= 50){
 							enemies.erase(et);
 							wasErased = true;
 							et = enemies.begin();
@@ -114,20 +143,25 @@ int main(int argc, char* argv[]){
 						}
 						pt++;
 					}
-					if (wasErased) continue;
+					if (wasErased){
+						wasErased = false;
+						continue;
+					}
 					et++;
 				}
 
 				//correctly managing abilities between the world and the player
-				std::map<std::string, Ability*>::iterator at;
-				for (at = world.getAbilities()->begin(); at != world.getAbilities()->end(); at++){
-					if (getDistance(at->second->getX(), at->second->getY(), player.getX(), player.getY()) <= 20){
+				std::map<std::string, Ability*>::iterator at = world.getAbilities()->begin();
+				while (at != world.getAbilities()->end()){
+					if (getDistance(at->second->getX(), at->second->getY(), player.getX(), player.getY()) <= 50){
 						std::string name = at->first;
 						Ability* transfer = world.getAbility(name);
 						player.addAbility(transfer);
 						world.removeAbility(name);
-						if (world.getAbilities()->size() == 0) break;
+						at = world.getAbilities()->begin();
+						continue;
 					}
+					at++;
 				}
 
 				//clearing screen
@@ -135,7 +169,7 @@ int main(int argc, char* argv[]){
 				SDL_RenderClear(gRenderer);
 
 				//drawing the world
-				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
+				SDL_SetRenderDrawColor(gRenderer, 0x4C, 0x69, 0x4B, 0xFF);
 				SDL_RenderFillRect(gRenderer, world.getMapRect());
 
 				player.render(gRenderer);	//rendering the player
@@ -153,7 +187,7 @@ int main(int argc, char* argv[]){
 				if (enemies.size() == 0) gameOver = victory = gameOverInitiated = true;
 
 				for (et = enemies.begin(); et != enemies.end(); et++){
-					if (getDistance(player.getX(), player.getY(), et->second->getX(), et->second->getY()) <= 20){
+					if (getDistance(player.getX(), player.getY(), et->second->getX(), et->second->getY()) <= 50){
 						gameOver = gameOverInitiated = true;
 					}
 				}

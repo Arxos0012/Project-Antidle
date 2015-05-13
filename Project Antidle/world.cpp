@@ -52,13 +52,11 @@ void World::update(Player& player){
 
 
 void World::addStatic(Static* stat){
-	std::cout << "adding " << stat->getName() << " to world\n";
 	std::map<std::string, Static*>::iterator it = statics.begin();
 	statics.insert(it, std::pair<std::string, Static*>(stat->getName(), stat));
 }
 
 void World::addAbility(Ability* ability){
-	std::cout << "adding " << ability->getName() << " to world\n";
 	std::map<std::string, Ability*>::iterator it = abilities.begin();
 	abilities.insert(it, std::pair<std::string, Ability*>(ability->getName(), ability));
 }
@@ -99,8 +97,8 @@ std::vector<Static*> World::getOnScreenStatics(){
 }
 
 bool World::onScreen(Static* stat){
-	bool inXBound = (stat->getX() >= 0) && (stat->getX() <= screenWidth);
-	bool inYBound = (stat->getY() >= 0) && (stat->getY() <= screenHeight);
+	bool inXBound = (stat->getScreenRect()->x >= 0) && (stat->getScreenRect()->x <= screenWidth);
+	bool inYBound = (stat->getScreenRect()->y >= 0) && (stat->getScreenRect()->y <= screenHeight);
 
 	return inXBound && inYBound;
 }

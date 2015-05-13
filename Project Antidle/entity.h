@@ -23,7 +23,6 @@ public:
 	}
 
 	~Entity(){
-		std::cout << name << " is done!!!\n";
 	}
 
 
