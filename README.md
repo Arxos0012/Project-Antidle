@@ -52,11 +52,15 @@ Have SDL downloaded and placed in the correct directory:
 ###Controls:
 
 W: move up
+
 S: move down
+
 A: move left
+
 D: move right
 
 Left Click: Use first ability
+
 Right Click: Use second ability
 
 ###Gameplay
