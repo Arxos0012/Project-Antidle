@@ -1,37 +1,33 @@
-#ifndef FIREBALL_H
-#define FIREBALL_H
+#ifndef ICEBLAST_H
+#define ICEBLAST_H
 
-#include <map>
 #include "ability.h"
-#include "projectile.h"
 
-class FireBall : public Ability{
+class IceBlast : public Ability{
 public:
-	FireBall(SDL_Renderer* renderer, int x, int y, int screenWidth, int screenHeight, int playerX, int playerY, std::string iconPath)
-		: Ability(renderer,x,y,screenWidth,screenHeight,playerX,playerY, iconPath, "Fireball Ability"){}
-
+	IceBlast(SDL_Renderer* renderer, int x, int y, int screenWidth, int screenHeight, int playerX, int playerY, std::string iconPath)
+		: Ability(renderer, x, y, screenWidth, screenHeight, playerX, playerY, iconPath, "IceBlast Ability"){}
+	
 	bool notInScreen(Projectile* projectile){
 		bool notInXBounds = (projectile->getScreenX() < 0 || projectile->getScreenX() > screenWidth);
 		bool notInYBounds = (projectile->getScreenY() < 0 || projectile->getScreenY() > screenHeight);
 		return notInXBounds || notInYBounds;
 	}
 
-	void performAction(SDL_Renderer* renderer, int playerX, int playerY, int mouseX, int mouseY){
-
-		mouseX -= screenWidth / 2;
-		mouseY -= screenHeight / 2;
-
-		double direction = std::atan2(mouseY, mouseX) * TO_DEGREES;
-
+	void performAction(SDL_Renderer* renderer, int playerX, int playerY){
 		int playerCoords[] = { playerX, playerY };
+		Projectile* newSpread[8];
+		for (int i = 0; i < 8; i++){
+			newSpread[i] = new Projectile(playerCoords, 300, (i/8.0)*2*M_PI*TO_DEGREES, renderer, playerX, playerY, screenWidth, screenHeight, "ice shard.png", "ice shard");
+		}
 
-		std::string name = "fireball " + std::to_string(projectiles.size());
-		std::string filePath = "fireball.png";
+		std::map<std::string, Projectile*>::iterator it;
+		for (int j = 0; j < 8; j++){
+			it = projectiles.begin();
+			projectiles.insert(it, std::pair<std::string, Projectile*>(newSpread[j]->getName(), newSpread[j]));
+		}
+		
 
-		Projectile* newProjectile = new Projectile(playerCoords, 300, direction, renderer, playerX, playerY, screenWidth, screenHeight, filePath, name);
-
-		std::map<std::string, Projectile*>::iterator it = projectiles.begin();
-		projectiles.insert(it, std::pair<std::string, Projectile*>(name, newProjectile));
 	}
 
 	void updateProjectiles(float time, int playerX, int playerY) {
@@ -65,7 +61,7 @@ public:
 		renderProjectiles(renderer);
 	}
 
-	~FireBall(){
+	~IceBlast(){
 		std::map<std::string, Projectile*>::iterator it;
 		for (it = projectiles.begin(); it != projectiles.end(); it++){
 			delete it->second;

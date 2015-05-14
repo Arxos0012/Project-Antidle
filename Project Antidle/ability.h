@@ -6,6 +6,7 @@
 #include <map>
 #include <string>
 #include "entity.h"
+#include "projectile.h"
 
 class Ability : public Entity{
 public:
@@ -31,6 +32,7 @@ public:
 	void setKey(int scanCode){ keyScanCode = scanCode; }
 
 	virtual void performAction(){}
+	virtual void performAction(SDL_Renderer* renderer, int playerX, int playerY){}
 	virtual void performAction(SDL_Renderer* renderer, int playerX, int playerY, int mouseX, int mouseY){}
 
 	int getScanCode(){ return keyScanCode; }
@@ -44,10 +46,13 @@ public:
 	int getIconWidth(){ return icon.getWidth(); }
 	int getIconHeight(){ return icon.getHeight(); }
 
+	std::map<std::string, Projectile*> getProjectiles(){ return this->projectiles; }
+
 private:
 	bool playerOwned = false;
 	int keyScanCode;
 protected:
+	std::map<std::string, Projectile*> projectiles;
 	Texture icon;
 	float TO_DEGREES = 180 / M_PI;
 };

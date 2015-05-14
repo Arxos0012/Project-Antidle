@@ -83,5 +83,8 @@
     <ClInclude Include="static.h">
       <Filter>Header Files\Entity\Objects\Static Objects</Filter>
     </ClInclude>
+    <ClInclude Include="IceBlast.h">
+      <Filter>Header Files\Entity\Abilities</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

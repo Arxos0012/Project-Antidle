@@ -4,6 +4,7 @@ void Enemy::update(Player &player, float time){
 	move(player, time);
 	screenRect.x = (screenWidth / 2 + center.x) - player.getX() - screenRect.w / 2;
 	screenRect.y = (screenHeight / 2 + center.y) - player.getY() - screenRect.h / 2;
+
 }
 
 void Enemy::render(SDL_Renderer* renderer){

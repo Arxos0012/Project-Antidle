@@ -82,13 +82,18 @@ void Player::update(SDL_Renderer* renderer, float time, std::vector<Static*>& st
 		untouch(*st, time);
 	}
 
+	if (controls.getLeftMouseButton()){
+		int info = {};
+		triggerAbility(primeAbilities[0], renderer, info);
+	}
+	if (controls.getRightMouseButton()){
+		int info = {};
+		triggerAbility(primeAbilities[1], renderer, info);
+	}
+
 	std::map<std::string, Ability*>::iterator it;
 	for (it = abilities.begin(); it != abilities.end(); it++){
-		if (controls.getLeftMouseButton() && it->second->getName() == "Fireball Ability")
-			it->second->performAction(renderer, center.x, center.y, controls.getMouseX(), controls.getMouseY());
-	}
-	for (it = abilities.begin(); it != abilities.end(); it++){
-		if (it->second->getName() == "Fireball Ability") it->second->update(time, center.x, center.y);
+		it->second->update(time, center.x, center.y);
 	}
 
 }
@@ -125,6 +130,30 @@ void Player::untouch(Static* stat, float time){
 			moveLeft(time);
 		}
 	}
+}
+
+void Player::triggerAbility(Ability* ability, SDL_Renderer* renderer, int* info){
+	if (ability->getName() == "FireBall Ability") ability->performAction(renderer, info[0], info[1], info[2], info[3]);
+	if (ability->getName() == "IceBlast Ability") ability->performAction(renderer, info[0], info[1]);
+}
+
+std::map<std::string, Projectile*> Player::getFiredProjectiles(){
+	std::map<std::string, Projectile*> projectiles;
+	std::map<std::string, Projectile*>::iterator pt;
+	std::map<std::string, Ability*>::iterator at;
+	
+	std::map<std::string, Projectile*> workingProjs;
+
+	for (at = abilities.begin(); at != abilities.end(); at++){
+		workingProjs = at->second->getProjectiles();
+		if (workingProjs.size() == 0) continue;
+		for (pt = workingProjs.begin(); pt != workingProjs.end(); pt++){
+			std::map<std::string, Projectile*>::iterator dt = projectiles.begin();
+			projectiles.insert(dt, std::pair<std::string, Projectile*>(pt->second->getName(), pt->second));
+		}
+	}
+
+	return projectiles;
 }
 
 void Player::render(SDL_Renderer* renderer){

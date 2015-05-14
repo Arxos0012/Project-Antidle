@@ -7,6 +7,7 @@
 #include "ability.h"
 #include "controls.h"
 #include "static.h"
+#include "projectile.h"
 
 class Player : public Entity{
 public:
@@ -33,6 +34,8 @@ public:
 	void addAbility(Ability* ability);
 	void removeAbiltiy(std::string &name);
 
+	std::map<std::string, Projectile*> getFiredProjectiles();
+
 	Ability* getAbility(std::string &name);
 
 private:
@@ -50,6 +53,7 @@ private:
 	void moveDown(float time);
 
 	void untouch(Static* stat, float time);
+	void triggerAbility(Ability* ability, SDL_Renderer* renderer, int* info);
 };
 
 #endif

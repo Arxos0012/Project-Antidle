@@ -11,8 +11,10 @@
 #include "player.h"
 
 #include "FireBall.h"
+#include "IceBlast.h"
 #include "Enemy.h"
 #include "static.h"
+#include "texture.h"
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
@@ -23,8 +25,12 @@ bool init();		//initalizes all SDL stuff
 bool loadMedia();	//loads all assets
 void close();		//frees up all memory at the end
 
+float getDistance(int x, int y, int a, int b);
+
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
+
+bool gameOver = false, victory = false, gameOverInitiated = false;
 
 int main(int argc, char* argv[]){
 	if (!init()){
@@ -36,17 +42,28 @@ int main(int argc, char* argv[]){
 	else{
 		bool quit = false;
 
+		std::map <std::string, Enemy*> enemies;
+		std::map <std::string, Enemy*>::iterator et = enemies.begin();
+
 		World world(550, 550, SCREEN_WIDTH, SCREEN_HEIGHT);
 		Player player(gRenderer, 0, 0, world.getWidth(), world.getHeight(), SCREEN_WIDTH, SCREEN_HEIGHT, "player.png");
 		Enemy enemy(gRenderer, 100, -100, SCREEN_WIDTH, SCREEN_HEIGHT, player, "enemy.png");
 
 		FireBall fireball(gRenderer, -100, -100, SCREEN_WIDTH, SCREEN_HEIGHT, player.getX(), player.getY(), "test_icon.png");
+		IceBlast iceblast(gRenderer, -100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, player.getX(), player.getY(), "test_icon.png");
 
 		Static brick(gRenderer, 200, 200, player.getX(), player.getY(), SCREEN_WIDTH, SCREEN_HEIGHT, "brick.png");
 
+		enemies.insert(et, std::pair<std::string, Enemy*>(enemy.getName(), &enemy));
+
 		world.addAbility(&fireball);
+		world.addAbility(&iceblast);
 
 		world.addStatic(&brick);
+
+		Texture gameOverTexture, victoryTexture, freezeFrame;
+		gameOverTexture.loadTexture("gameover.png", gRenderer);
+		victoryTexture.loadTexture("victory.png", gRenderer);
 
 		SDL_Event e;
 		gControls.setEvent(&e);
@@ -65,58 +82,113 @@ int main(int argc, char* argv[]){
 				}
 			}
 
-			//getting time passed
-			currentTime = SDL_GetTicks();
-			timePassed = (currentTime - lastTime) / 1000.0f;	//division for conversion from milliseconds to seconds
-			cumulativeTime += timePassed;
-			lastTime = currentTime;
+			if (!gameOver){
 
-			//player input
-			player.update(gRenderer, timePassed, world.getOnScreenStatics());
-			
-			//moving things in the world (and the world of course) based on time and player's position
-			world.update(player);
+				//getting time passed
+				currentTime = SDL_GetTicks();
+				timePassed = (currentTime - lastTime) / 1000.0f;	//division for conversion from milliseconds to seconds
+				cumulativeTime += timePassed;
+				lastTime = currentTime;
 
-			enemy.update(player, timePassed);
+				//player input
+				player.update(gRenderer, timePassed, world.getOnScreenStatics());
 
-			//correctly managing abilities between the world and the player
-			std::map<std::string, Ability*>::iterator at;
-			for (at = world.getAbilities()->begin(); at != world.getAbilities()->end(); at++){
-				float distance = sqrt(pow(at->second->getX() - player.getX(), 2) + pow(at->second->getY() - player.getY(), 2));
-				if (distance <= 20){
-					std::string name = at->first;
-					Ability* transfer = world.getAbility(name);
-					player.addAbility(transfer);
-					world.removeAbility(name);
-					if (world.getAbilities()->size() == 0) break;
+				//moving things in the world (and the world of course) based on time and player's position
+				world.update(player);
+
+				std::map<std::string, Projectile*> playerProjectiles = player.getFiredProjectiles();
+				std::map<std::string, Projectile*>::iterator pt;
+
+				bool wasErased = false;
+
+				et = enemies.begin();
+				while (et != enemies.end()){
+					et->second->update(player, timePassed);
+					pt = playerProjectiles.begin();
+					while (pt != playerProjectiles.end()){
+						if (getDistance(et->second->getX(), et->second->getY(), pt->second->getX(), pt->second->getY()) <= 20){
+							enemies.erase(et);
+							wasErased = true;
+							et = enemies.begin();
+							break;
+						}
+						pt++;
+					}
+					if (wasErased) continue;
+					et++;
+				}
+
+				//correctly managing abilities between the world and the player
+				std::map<std::string, Ability*>::iterator at;
+				for (at = world.getAbilities()->begin(); at != world.getAbilities()->end(); at++){
+					if (getDistance(at->second->getX(), at->second->getY(), player.getX(), player.getY()) <= 20){
+						std::string name = at->first;
+						Ability* transfer = world.getAbility(name);
+						player.addAbility(transfer);
+						world.removeAbility(name);
+						if (world.getAbilities()->size() == 0) break;
+					}
+				}
+
+				//clearing screen
+				SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
+				SDL_RenderClear(gRenderer);
+
+				//drawing the world
+				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
+				SDL_RenderFillRect(gRenderer, world.getMapRect());
+
+				player.render(gRenderer);	//rendering the player
+
+				for (et = enemies.begin(); et != enemies.end(); ++et){
+					et->second->render(gRenderer);
+				}
+
+				//rendering the abilites
+				world.render(gRenderer);
+
+				//shows final product on screen
+				SDL_RenderPresent(gRenderer);
+
+				if (enemies.size() == 0) gameOver = victory = gameOverInitiated = true;
+
+				for (et = enemies.begin(); et != enemies.end(); et++){
+					if (getDistance(player.getX(), player.getY(), et->second->getX(), et->second->getY()) <= 20){
+						gameOver = gameOverInitiated = true;
+					}
+				}
+
+				frames++;
+				//Displays current FPS of game in the title every second
+				if (cumulativeTime >= 1){
+					std::string title = "Project Antidle | fps " + std::to_string(frames / cumulativeTime);
+					const char* finalTitle = title.c_str();
+
+					SDL_SetWindowTitle(gWindow, finalTitle);
+					cumulativeTime--;
+					frames = 0;
 				}
 			}
+			else{
+				if (gameOverInitiated){
+					if (victory) victoryTexture.render((SCREEN_WIDTH - gameOverTexture.getWidth()) / 2, (SCREEN_HEIGHT - gameOverTexture.getHeight()) / 2, gRenderer);
+					else gameOverTexture.render((SCREEN_WIDTH - gameOverTexture.getWidth()) / 2, (SCREEN_HEIGHT - gameOverTexture.getHeight()) / 2, gRenderer);
+					
+					SDL_Surface *sshot = SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
+					SDL_RenderReadPixels(gRenderer, NULL, SDL_PIXELFORMAT_ARGB8888, sshot->pixels, sshot->pitch);
+					SDL_SaveBMP(sshot, "freezeframe.bmp");
+					SDL_FreeSurface(sshot);
+					freezeFrame.loadTexture("freezeframe.bmp", gRenderer);
+					gameOverInitiated = false;
+				}
+				//clearing screen
+				SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
+				SDL_RenderClear(gRenderer);
 
-			//clearing screen
-			SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
-			SDL_RenderClear(gRenderer);
-			
-			//drawing the world
-			SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
-			SDL_RenderFillRect(gRenderer, world.getMapRect());
+				freezeFrame.render(0, 0, gRenderer);
 
-			player.render(gRenderer);	//rendering the player
-			enemy.render(gRenderer);	//rendering the enemy
-
-			//rendering the abilites
-			world.render(gRenderer);
-
-			SDL_RenderPresent(gRenderer);
-
-			frames++;
-			//Displays current FPS of game in the title every second
-			if (cumulativeTime >= 1){
-				std::string title = "Project Antidle | fps " + std::to_string(frames / cumulativeTime);
-				const char* finalTitle = title.c_str();
-
-				SDL_SetWindowTitle(gWindow, finalTitle);
-				cumulativeTime--;
-				frames = 0;
+				//shows freeze frame on screen
+				SDL_RenderPresent(gRenderer);
 			}
 		}
 	}
@@ -156,6 +228,10 @@ bool init(){
 	}
 
 	return success;
+}
+
+float getDistance(int x, int y, int a, int b){
+	return sqrt(pow(x - a, 2) + pow(y - b, 2));
 }
 
 bool loadMedia(){
