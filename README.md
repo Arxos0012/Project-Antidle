@@ -3,21 +3,17 @@ A game that revolves around collect abilities, not items.
 
 This was a project created for my high school Coding Design class. Beneath are instructions for building and running the game yourself:
 
-Prerequisites
+###Prerequisites
 -Have Microsoft Windows 7 or later installed as your operating system.
 
 -Have the "Microsoft Visual Studios Express 2013 for Windows Desktop" IDE installed (can be found here: https://www.visualstudio.com/downloads/download-visual-studio-vs)
 
 -Have SDL downloaded and placed in the correct directory:
-a)  First download the SDL Development Library for Windows from here (the Visual C++ version):
-    https://www.libsdl.org/download-2.0.php; and download the SDL-image Development Library for Windows library from here (the
-    Visual C++ version): https://www.libsdl.org/projects/SDL_image/
+    1.First download the SDL Development Library for Windows from here (the Visual C++ version): https://www.libsdl.org/download-2.0.php; and download the SDL-image Development Library for Windows library from here (the Visual C++ version): https://www.libsdl.org/projects/SDL_image/
 
-b)  Got to your C:/ folder and create folders for both the SDL library and the SDL_image library. You may name them what ever
-    you want, but you must remeber the names of these folders for later. Extract the contents of the both zip files to their
-    respective folders.
+    2.Got to your C:/ folder and create folders for both the SDL library and the SDL_image library. You may name them what ever you want, but you must remeber the names of these folders for later. Extract the contents of the both zip files to their respective folders.
 
-Building and Playing:
+###Building and Playing:
 1)  Open Visual Studios. In the toolbar got to Team->Connect to Team Foundation Server. The "Team Explorer" tab should pop up.
 
 2)  Under "Local Git Repositories", select Clone and copy the URL to this project in the textfield, then select "Clone".
@@ -53,7 +49,7 @@ Building and Playing:
 10) Click "OK". Go to Build in the toolbar and select "Build Solution". Wait for the project to build, then got to Debug in the
     toolbar and select "Start Debugging". The game should be up and running.
 
-Controls:
+###Controls:
 
 W - move up
 S - move down
@@ -63,6 +59,6 @@ D - move right
 Left Click - Use first ability
 Right Click - Use second ability
 
-Gameplay
+###Gameplay
 
 You will start off in the middle of the map. You must find and locate the abilities on the map to kill the enemies that are stalking you. Though you cannot phase through the walls, they can, so try not to get trapped. Collect ability simply by moving over them. Extermiate the enemies and win the game. Syro Skenict!
